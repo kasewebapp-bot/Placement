@@ -28,9 +28,36 @@ document.addEventListener('DOMContentLoaded', () => {
         "Hospitality", "Hotel", "Dairy", "Automobile",
         "Commercial Vehicle", "Energy", "Healthcare", "Hospital Management",
         "Banking", "Financial Services", "Insurance",
-        "MFI-NBFC","Sales", "IT", "BPO Services", "Education", "Entertainment",
+        "MFI-NBFC", "Sales", "IT", "BPO Services", "Education", "Entertainment",
         "Delivery Services", "Pharmaceuticals", "Construction"
     ];
+
+    const sectorIcons = {
+        "Retail": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+        "Manufacturing": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0-4.4-3.6-8-8-8s-8 3.6-8 8c0 4.4 3.6 8 8 8s8-3.6 8-8Z"/><path d="M20 10h2"/><path d="M2 10h2"/><path d="M12 2v2"/><path d="M12 18v2"/><path d="M17 4.9l1.4 1.4"/><path d="M5.6 17.7l1.4 1.4"/><path d="M18.4 17.7l-1.4 1.4"/><path d="M7 4.9L5.6 6.3"/></svg>`,
+        "Distribution": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22.5V12"/></svg>`,
+        "Logistics": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polyline points="16 8 20 8 23 11 23 16 16 16"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+        "Hospitality": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>`,
+        "Hotel": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>`,
+        "Dairy": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10l1 4v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6l1-4Z"/><path d="M7 6h10"/><path d="M10 11h4"/><path d="M10 15h4"/></svg>`,
+        "Automobile": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>`,
+        "Commercial Vehicle": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polyline points="16 8 20 8 23 11 23 16 16 16"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+        "Energy": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-2 10h3L11 22"/></svg>`,
+        "Healthcare": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+        "Hospital Management": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M14 2v4"/><path d="M10 2v4"/><path d="M3 10h18"/></svg>`,
+        "Banking": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="17" width="20" height="3"/><path d="M10 17V11"/><path d="M14 17V11"/><path d="M6 17V11"/><path d="M18 17V11"/><path d="M2 11l10-8 10 8Z"/></svg>`,
+        "Financial Services": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+        "Insurance": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>`,
+        "MFI-NBFC": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><rect x="2" y="17" width="20" height="3"/><path d="M10 17V11"/><path d="M14 17V11"/></svg>`,
+        "Sales": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>`,
+        "IT": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+        "BPO Services": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18c.66 2 2.33 3 5 3 2.66 0 4.33-1 5-3"/><path d="M8 11V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a4 4 0 0 0 8 0"/><path d="M22 13V6a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v7a4 4 0 0 0 8 0"/></svg>`,
+        "Education": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`,
+        "Entertainment": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>`,
+        "Delivery Services": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polyline points="16 8 20 8 23 11 23 16 16 16"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+        "Pharmaceuticals": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>`,
+        "Construction": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="8" rx="1"/><path d="M17 14v7"/><path d="M7 14v7"/><path d="M17 3v3"/><path d="M7 3v3"/><path d="M10 14 2.3 6.3"/><path d="m14 14 7.7-7.7"/></svg>`
+    };
 
     // Populate Year of Passing Dropdown (2026 to 1980)
     const yearSelect = document.getElementById('yearOfPassing');
@@ -57,19 +84,70 @@ document.addEventListener('DOMContentLoaded', () => {
         return div;
     }
 
+    function createSectorCard(name) {
+        const div = document.createElement('div');
+        div.className = 'logo-card';
+        const iconContent = sectorIcons[name] || name.charAt(0);
+        div.innerHTML = `<div class="card-icon">${iconContent}</div><span>${name}</span>`;
+        return div;
+    }
+
     // Double the items for infinite scroll effect
     [...recruiters, ...recruiters].forEach(company => {
         track.appendChild(createLogoCard(company));
     });
 
-    // Populate Sectors on Landing Page
-    const landingSectorsList = document.getElementById('sectors-list');
-    sectors.forEach(name => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = `<div class="card-icon">${name.charAt(0)}</div><span>${name}</span>`;
-        if (landingSectorsList) landingSectorsList.appendChild(div);
-    });
+    // Populate Sectors on Landing Page (Dual Carousel)
+    const sectorsTrack1 = document.getElementById('sectors-track-1');
+    const sectorsTrack2 = document.getElementById('sectors-track-2');
+
+    if (sectorsTrack1 && sectorsTrack2) {
+        const half = Math.ceil(sectors.length / 2);
+        const row1 = sectors.slice(0, half);
+        const row2 = sectors.slice(half);
+
+        [...row1, ...row1].forEach(name => sectorsTrack1.appendChild(createSectorCard(name)));
+        [...row2, ...row2].forEach(name => sectorsTrack2.appendChild(createSectorCard(name)));
+    }
+
+    // Stats Counter Animation
+    const stats = [
+        { id: 'stat-companies', target: 100, suffix: '+' },
+        { id: 'stat-vacancies', target: 1000, suffix: '+' },
+        { id: 'stat-package', target: 10, suffix: ' LPA' }
+    ];
+
+    function animateValue(obj, start, end, duration, suffix) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start) + suffix;
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    const observerOptions = {
+        threshold: 0.5
+    };
+
+    const statsObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                stats.forEach(stat => {
+                    const el = document.getElementById(stat.id);
+                    if (el) animateValue(el, 0, stat.target, 2000, stat.suffix);
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    const statsSection = document.querySelector('.stats');
+    if (statsSection) statsObserver.observe(statsSection);
 
     // Populate Sectors as Checkboxes
     const sectorContainer = document.getElementById('sector-checkboxes');
@@ -243,5 +321,3 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 });
-
-
