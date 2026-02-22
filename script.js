@@ -26,9 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectors = [
         "Retail", "Manufacturing", "Distribution", "Logistics",
         "Hospitality", "Hotel", "Dairy", "Automobile",
-        "Commercial Vehicle", "Energy", "Healthcare / Hospital Management",
-        "BFSI (Banking, Financial Services, and Insurance)",
-        "MFI-NBFC (Microfinance Institution - NBFC)",
+        "Commercial Vehicle", "Energy", "Healthcare", "Hospital Management",
+        "Banking", "Financial Services", "Insurance",
+        "MFI-NBFC",
         "IT", "BPO Services", "Education", "Entertainment",
         "Delivery Services", "Pharmaceuticals", "Construction"
     ];
@@ -244,3 +244,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 });
+
