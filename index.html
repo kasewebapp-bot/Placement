@@ -48,15 +48,15 @@
             <div class="container">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <h3>100+</h3>
+                        <h3 id="stat-companies">0</h3>
                         <p>Companies</p>
                     </div>
                     <div class="stat-card">
-                        <h3>1000+</h3>
+                        <h3 id="stat-vacancies">0</h3>
                         <p>Vacancies</p>
                     </div>
                     <div class="stat-card">
-                        <h3>10 LPA</h3>
+                        <h3 id="stat-package">0</h3>
                         <p>Max Package</p>
                     </div>
                 </div>
@@ -77,8 +77,15 @@
         <section id="sectors" class="sectors">
             <div class="container">
                 <h2 class="section-title">Focus Sectors</h2>
-                <div class="sectors-grid" id="sectors-list">
-                    <!-- Loaded via JS -->
+                <div class="carousel-container sector-carousel">
+                    <div class="carousel-track" id="sectors-track-1">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+                <div class="carousel-container sector-carousel" style="margin-top: 1rem;">
+                    <div class="carousel-track track-reverse" id="sectors-track-2">
+                        <!-- Loaded via JS -->
+                    </div>
                 </div>
             </div>
         </section>
@@ -346,6 +353,5 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         <script src="script.js"></script>
 </body>
-
 
 </html>
