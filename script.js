@@ -275,9 +275,15 @@ document.addEventListener('DOMContentLoaded', () => {
         data.postOffice = formData.get('postOffice') || "";
         data.panchayat = formData.get('panchayat') || "";
 
-        // Combine for Admit Card display
-        const addressParts = [data.houseInfo, data.place, data.postOffice, data.panchayat].filter(p => p);
-        const displayAddress = addressParts.join(', ');
+        // Combine for Admit Card display (5 distinct lines)
+        const addressParts = [
+            data.houseInfo,
+            data.place,
+            data.postOffice,
+            data.panchayat,
+            data.district
+        ].filter(p => p);
+        const displayAddress = addressParts.join('<br>');
 
         // Split sectors into 3 separate fields (for sheet columns)
         data.sector1 = preferredSectors[0] || "";
@@ -304,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('displayRegId').innerText = result.regId || "KASE/PD/NM/0000";
                 document.getElementById('displayName').innerText = data.fullName;
                 document.getElementById('displayQual').innerText = data.qualification;
-                document.getElementById('displayAddress').innerText = displayAddress;
+                document.getElementById('displayAddress').innerHTML = displayAddress;
                 document.getElementById('displaySectors').innerText = preferredSectors.join(', ');
 
                 modal.classList.add('show');
