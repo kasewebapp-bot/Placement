@@ -206,6 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeModal) {
         closeModal.addEventListener('click', () => {
             modal.classList.remove('show');
+            document.body.style.overflow = ''; // Unlock scroll
         });
     }
 
@@ -316,6 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('displaySectors').innerHTML = sectorHtml;
 
                 modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Lock scroll
                 form.reset();
                 expDetails.classList.add('hidden');
                 submitBtn.disabled = false;
