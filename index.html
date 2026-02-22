@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Drive 2026 | Register Now</title>
+    <meta name="description"
+        content="Official registration portal for the Placement Drive on 28th February 2026. 100+ companies, 1000+ vacancies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="container">
+            <div class="logo">
+                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg"
+                    alt="Company Logo">
+            </div>
+            <a href="#register" class="btn btn-primary">Register Now</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Placement Drive 2026</span>
+                    <h1>Shape Your Future on <span>28th Feb</span></h1>
+                    <div class="hero-details">
+                        <p><strong>Venue:</strong> LBS Institute Of Technology for Women, Poojappura, Thiruvananthapuram
+                        </p>
+                        <p><strong>Time:</strong> 10:00 AM to 04:00 PM</p>
+                    </div>
+                    <p>Join Kerala's most significant recruitment event. Connect with 100+ top recruiters and explore
+                        1000+ vacancies across multiple sectors.</p>
+                    <div class="hero-btns">
+                        <a href="#register" class="btn btn-primary btn-lg">Start Registration</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>100+</h3>
+                        <p>Companies</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>1000+</h3>
+                        <p>Vacancies</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>10 LPA</h3>
+                        <p>Max Package</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="recruiters" class="recruiters">
+            <div class="container">
+                <h2 class="section-title">Major Recruiters</h2>
+                <div class="carousel-container">
+                    <div class="carousel-track" id="recruiters-track">
+                        <!-- Loaded via JS as a train -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sectors" class="sectors">
+            <div class="container">
+                <h2 class="section-title">Focus Sectors</h2>
+                <div class="sectors-grid" id="sectors-list">
+                    <!-- Loaded via JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="register" class="registration">
+            <div class="container">
+                <div class="form-container">
+                    <h2 class="section-title">Registration Form</h2>
+                    <p class="section-subtitle">Please fill in your details to register. <br><strong>Helpline:</strong>
+                        940000000, 95000000</p>
+
+                    <form id="placementForm">
+                        <div class="form-section">
+                            <h3 class="form-section-title">🟢 Section 1: Personal Details</h3>
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" placeholder="Your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="gender" value="Male"> Male</label>
+                                    <label><input type="radio" name="gender" value="Female"> Female</label>
+                                    <label><input type="radio" name="gender" value="Other"> Other</label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="dob">Date of Birth</label>
+                                    <input type="date" id="dob" name="dob" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="age">Age</label>
+                                    <input type="number" id="age" name="age" placeholder="Age" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="mobile">Mobile Number (Required)</label>
+                                    <input type="tel" id="mobile" name="mobile" placeholder="Mobile Number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="whatsapp">WhatsApp Number</label>
+                                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="WhatsApp Number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email ID (Required)</label>
+                                <input type="email" id="email" name="email" placeholder="Email Address" required>
+                            </div>
+                            <div class="form-grid-address">
+                                <div class="form-group">
+                                    <label>House Name or No.</label>
+                                    <input type="text" name="houseInfo" required placeholder="House Name or No.">
+                                </div>
+                                <div class="form-group">
+                                    <label>Place</label>
+                                    <input type="text" name="place" required placeholder="Place">
+                                </div>
+                                <div class="form-group">
+                                    <label>Post Office</label>
+                                    <input type="text" name="postOffice" required placeholder="Post Office">
+                                </div>
+                                <div class="form-group">
+                                    <label>Panchayat or Municipality</label>
+                                    <input type="text" name="panchayat" required
+                                        placeholder="Panchayat or Municipality">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="district">District</label>
+                                <select id="district" name="district" required>
+                                    <option value="">Select District</option>
+                                    <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                    <option value="Kollam">Kollam</option>
+                                    <option value="Pathanamthitta">Pathanamthitta</option>
+                                    <option value="Alappuzha">Alappuzha</option>
+                                    <option value="Kottayam">Kottayam</option>
+                                    <option value="Idukki">Idukki</option>
+                                    <option value="Ernakulam">Ernakulam</option>
+                                    <option value="Thrissur">Thrissur</option>
+                                    <option value="Palakkad">Palakkad</option>
+                                    <option value="Malappuram">Malappuram</option>
+                                    <option value="Kozhikode">Kozhikode</option>
+                                    <option value="Wayanad">Wayanad</option>
+                                    <option value="Kannur">Kannur</option>
+                                    <option value="Kasaragod">Kasaragod</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Preferred Job Location</label>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="location" value="Within District"> Within
+                                        District</label>
+                                    <label><input type="checkbox" name="location" value="Within Kerala"> Within
+                                        Kerala</label>
+                                    <label><input type="checkbox" name="location" value="Outside Kerala"> Outside
+                                        Kerala</label>
+                                    <label><input type="checkbox" name="location" value="Abroad"> Abroad</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">🟢 Section 2: Educational Qualification</h3>
+                            <div class="form-group">
+                                <label for="qualification">Highest Qualification</label>
+                                <select id="qualification" name="qualification" required>
+                                    <option value="">Select Qualification</option>
+                                    <option value="Below 10th">Below 10th</option>
+                                    <option value="SSLC / 10th">SSLC / 10th</option>
+                                    <option value="Plus Two (+2)">Plus Two (+2)</option>
+                                    <option value="ITI">ITI</option>
+                                    <option value="Diploma">Diploma</option>
+                                    <option value="VHSE">VHSE</option>
+                                    <option value="BA">BA</option>
+                                    <option value="BCom">BCom</option>
+                                    <option value="BSc">BSc</option>
+                                    <option value="BTech / BE">BTech / BE</option>
+                                    <option value="BBA">BBA</option>
+                                    <option value="BCA">BCA</option>
+                                    <option value="BSW">BSW</option>
+                                    <option value="BEd">BEd</option>
+                                    <option value="MBA">MBA</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="specialization">Specialization / Course Name</label>
+                                <input type="text" id="specialization" name="specialization"
+                                    placeholder="e.g. Computer Science" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="yearOfPassing">Year of Passing</label>
+                                    <select id="yearOfPassing" name="yearOfPassing" required>
+                                        <option value="">Select Year</option>
+                                        <!-- Will be populated by JS -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="percentage">Percentage / Grade</label>
+                                    <input type="text" id="percentage" name="percentage"
+                                        placeholder="e.g. 85% or 8.5 CGPA" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">🟢 Section 3: Employment Details</h3>
+                            <div class="form-group">
+                                <label>Are you a Fresher or Experienced candidate?</label>
+                                <div class="radio-group" id="employment-status-toggle">
+                                    <label><input type="radio" name="employed" value="Fresher" checked> Fresher</label>
+                                    <label><input type="radio" name="employed" value="Experienced"> Experienced</label>
+                                </div>
+                            </div>
+
+                            <div id="experience-details" class="hidden">
+                                <div class="form-group">
+                                    <label for="currentRole">Current/Last Job Role</label>
+                                    <input type="text" id="currentRole" name="currentRole" placeholder="Job Role">
+                                </div>
+                                <div class="form-group">
+                                    <label for="experience">Total Work Experience</label>
+                                    <select id="experience" name="experience">
+                                        <option value="">Select Experience</option>
+                                        <option value="Less than 1 year">Less than 1 year</option>
+                                        <option value="1–3 years">1–3 years</option>
+                                        <option value="3–5 years">3–5 years</option>
+                                        <option value="More than 5 years">More than 5 years</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prevCompany">Previous Company Name</label>
+                                    <input type="text" id="prevCompany" name="prevCompany" placeholder="Company Name">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="expectedSalary">Expected Salary (Monthly)</label>
+                                        <input type="text" id="expectedSalary" name="expectedSalary"
+                                            placeholder="Expected Salary">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="noticePeriod">Notice Period</label>
+                                        <input type="text" id="noticePeriod" name="noticePeriod"
+                                            placeholder="e.g. 1 month">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="jobSector">Preferred Job Sector (Max 3)</label>
+                                <div class="checkbox-group" id="sector-checkboxes">
+                                    <!-- Loaded via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Submit Registration</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer-bottom">
+            <div class="container">
+                <p><strong>Venue:</strong> LBS Institute Of Technology for Women, Poojappura, Thiruvananthapuram |
+                    <strong>Time:</strong> 10:00 AM - 04:00 PM
+                </p>
+                <p><strong>Helpline:</strong> 940000000, 95000000</p>
+                <p>&copy; 2026 Placement Drive. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <div id="successModal" class="modal">
+            <div class="modal-content admit-card-modal">
+                <div id="admitCardPrint" class="admit-card">
+                    <div class="admit-card-header">
+                        <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg"
+                            alt="KASE Logo" class="admit-logo">
+                        <div class="admit-title-box">
+                            <h3>PLACEMENT DRIVE 2026</h3>
+                            <p>Registration Admit Card</p>
+                        </div>
+                    </div>
+                    <div class="admit-body">
+                        <div class="reg-id-box">
+                            <span class="label">Registration ID:</span>
+                            <span id="displayRegId" class="value highlight">KASE/PD/NM/----</span>
+                        </div>
+                        <div class="info-grid-admit">
+                            <div class="info-item">
+                                <span class="label">Name:</span>
+                                <span id="displayName" class="value">---</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Qualification:</span>
+                                <span id="displayQual" class="value">---</span>
+                            </div>
+                            <div class="info-item w-100">
+                                <span class="label">Address:</span>
+                                <span id="displayAddress" class="value">---</span>
+                            </div>
+                            <div class="info-item w-100">
+                                <span class="label">Interested Sectors:</span>
+                                <span id="displaySectors" class="value">---</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admit-footer">
+                        <p><strong>Venue:</strong> LBS Institute Of Technology for Women, Poojappura</p>
+                        <p><strong>Date:</strong> 28th Feb 2026 | <strong>Time:</strong> 10:00 AM</p>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="downloadAdmitCard" class="btn btn-primary btn-lg">Download Admit Card (PDF)</button>
+                    <button id="closeModal" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <script src="script.js"></script>
+</body>
+
+</html>
