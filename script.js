@@ -28,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "Hospitality", "Hotel", "Dairy", "Automobile",
         "Commercial Vehicle", "Energy", "Healthcare", "Hospital Management",
         "Banking", "Financial Services", "Insurance",
-        "MFI-NBFC",
-        "IT", "BPO Services", "Education", "Entertainment",
+        "MFI-NBFC","Sales", "IT", "BPO Services", "Education", "Entertainment",
         "Delivery Services", "Pharmaceuticals", "Construction"
     ];
 
@@ -244,4 +243,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 });
+
 
