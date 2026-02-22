@@ -490,11 +490,13 @@ textarea:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.85);
     z-index: 2000;
     overflow-y: auto;
-    padding: 2rem 1rem;
-    backdrop-filter: blur(8px);
+    /* Enable scroll inside the modal overlay */
+    padding: 3rem 1rem;
+    /* More space at top/bottom for scrolling comfort */
+    backdrop-filter: blur(10px);
 }
 
 .modal.show {
@@ -505,27 +507,29 @@ textarea:focus {
 
 .modal-content {
     background-color: var(--white);
-    padding: 3rem;
+    padding: 2rem;
+    /* Reduced from 3rem */
     border-radius: 1.5rem;
     max-width: 600px;
     width: 95%;
     text-align: center;
     box-shadow: var(--shadow-lg);
     animation: modalIn 0.3s ease-out;
+    margin: 0 auto;
+    /* Center horizontally */
 }
 
 /* Admit Card Styling */
 .admit-card {
     background: var(--white);
-    padding: 2.5rem;
+    padding: 1.5rem;
+    /* Reduced from 2.5rem */
     border: 3px solid var(--primary);
     border-radius: 1.25rem;
     text-align: left;
     color: var(--text);
-    margin: 1rem;
-    /* Added margin to prevent clipping */
+    margin: 0.5rem 0;
     box-shadow: 0 0 0 10px var(--white);
-    /* Safety shadow for PDF rendering */
 }
 
 .admit-card-header {
