@@ -275,15 +275,14 @@ document.addEventListener('DOMContentLoaded', () => {
         data.postOffice = formData.get('postOffice') || "";
         data.panchayat = formData.get('panchayat') || "";
 
-        // Combine for Admit Card display (5 distinct lines)
-        const addressParts = [
-            data.houseInfo,
-            data.place,
-            data.postOffice,
-            data.panchayat,
-            data.district
-        ].filter(p => p);
-        const displayAddress = addressParts.join('<br>');
+        // Combine for Admit Card display (Strict 5-line format)
+        const displayAddress = [
+            formData.get('houseInfo'),
+            formData.get('place'),
+            formData.get('postOffice'),
+            formData.get('panchayat'),
+            formData.get('district')
+        ].filter(p => p && p.trim() !== "").join('<br>');
 
         // Split sectors into 3 separate fields (for sheet columns)
         data.sector1 = preferredSectors[0] || "";
@@ -311,7 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('displayName').innerText = data.fullName;
                 document.getElementById('displayQual').innerText = data.qualification;
                 document.getElementById('displayAddress').innerHTML = displayAddress;
-                document.getElementById('displaySectors').innerText = preferredSectors.join(', ');
+
+                // Populate Sectors as numbered list
+                const sectorHtml = preferredSectors.map((s, i) => `${i + 1}. ${s}`).join('<br>');
+                document.getElementById('displaySectors').innerHTML = sectorHtml;
 
                 modal.classList.add('show');
                 form.reset();
