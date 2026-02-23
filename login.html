@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Login - Placement Drive 2026</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        .login-container {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.05), transparent),
+                radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.05), transparent);
+        }
+
+        .login-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .login-header {
+            margin-bottom: 2rem;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: var(--secondary);
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        .register-link {
+            margin-top: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .register-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <nav>
+                <div class="logo" style="display: flex; align-items: center; gap: 1rem;">
+                    <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg"
+                        alt="KASE Logo" style="height: 50px;">
+                    <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif"
+                        alt="ODEPEC Logo" style="height: 50px;">
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Candidate Login</h2>
+                <p>Access your profile and apply for jobs</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" placeholder="10 Digit Mobile Number" required
+                        pattern="[0-9]{10}" maxlength="10">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary login-btn">Login to Dashboard</button>
+            </form>
+            <div class="register-link">
+                Don't have an account? <a href="index.html#register">Register Now</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyvI1SxTqioDr9ubaeykXpOODg8nxhAuhc-OuUpnTBhGR8KE3iE7Ryh45l0erADDEQ/exec';
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const submitBtn = loginForm.querySelector('button');
+            const originalText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Logging in...';
+
+            const data = {
+                action: 'login',
+                mobile: loginForm.mobile.value,
+                password: loginForm.password.value
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        sessionStorage.setItem('candidate_mobile', data.mobile);
+                        sessionStorage.setItem('candidate_name', result.fullName);
+                        sessionStorage.setItem('candidate_regId', result.regId);
+                        sessionStorage.setItem('candidate_gender', result.gender);
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        alert(result.error || 'Login failed. Please check your credentials.');
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = originalText;
+                    }
+                })
+                .catch(err => {
+                    console.error('Login Error:', err);
+                    alert('Connection error. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalText;
+                });
+        });
+    </script>
+</body>
+
+</html>
