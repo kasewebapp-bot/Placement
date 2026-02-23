@@ -143,19 +143,40 @@
             .sidebar {
                 width: 100%;
                 height: auto;
-                position: relative;
+                position: fixed;
+                top: 0;
+                left: 0;
                 flex-direction: row;
-                overflow-x: auto;
-                padding: 1rem;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 1.5rem;
+                box-shadow: var(--shadow);
             }
 
             .main-content {
                 margin-left: 0;
                 padding: 1.5rem;
+                margin-top: 80px;
+                /* Offset for fixed sidebar */
             }
 
             .sidebar .logo {
+                display: block !important;
+                margin-bottom: 0 !important;
+            }
+
+            .sidebar .logo img {
+                height: 35px !important;
+            }
+
+            .nav-item:not(.logout-item) {
                 display: none;
+                /* Hide 'Job Vacancies' text on mobile since it's the only page */
+            }
+
+            .logout-item {
+                margin-top: 0 !important;
+                padding: 0.5rem !important;
             }
         }
     </style>
@@ -171,7 +192,8 @@
                     alt="ODEPEC Logo" style="height: 40px;">
             </div>
             <div class="nav-item active">💼 Job Vacancies</div>
-            <div class="nav-item" style="margin-top: auto; color: #ef4444;" onclick="logout()">🚪 Logout</div>
+            <div class="nav-item logout-item" style="margin-top: auto; color: #ef4444;" onclick="logout()">🚪 Logout
+            </div>
         </aside>
 
         <main class="main-content">
@@ -321,6 +343,21 @@
         }
 
         function fetchVacancies() {
+            const CACHE_KEY = 'vacancies_data';
+            const CACHE_TIME_KEY = 'vacancies_time';
+            const CACHE_TTL = 15 * 60 * 1000; // 15 Minutes
+
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+            const now = Date.now();
+
+            if (cachedData && cachedTime && (now - cachedTime < CACHE_TTL)) {
+                console.log("Loading vacancies from cache...");
+                allVacancies = JSON.parse(cachedData);
+                populateSectors(allVacancies);
+                return;
+            }
+
             console.log("Fetching from CSV...");
             fetch(csvURL)
                 .then(res => {
@@ -331,6 +368,11 @@
                     if (!csv || csv.trim() === "") throw new Error("Empty CSV");
                     allVacancies = parseCSV(csv);
                     if (allVacancies.length === 0) throw new Error("No vacancies parsed");
+
+                    // Update Cache
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(allVacancies));
+                    localStorage.setItem(CACHE_TIME_KEY, now.toString());
+
                     populateSectors(allVacancies);
                 })
                 .catch(err => {
@@ -408,26 +450,34 @@
                 grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--secondary);"><h3>No vacancies found in this sector.</h3></div>';
                 return;
             }
-            grid.innerHTML = vacancies.map(v => {
+
+            // Using DocumentFragment for performance with 2000+ users
+            const fragment = document.createDocumentFragment();
+            vacancies.forEach(v => {
                 const jobKey = `${v.company} - ${v.title}`;
                 const isSelected = selectedJobs.includes(jobKey);
-                return `
-                    <div class="vacancy-card ${isSelected ? 'selected' : ''}">
-                        <div class="company">${v.company}</div>
-                        <h4>${v.title}</h4>
-                        <div class="details-box">
-                            <strong>Vacancies:</strong> ${v.vacancies}<br>
-                            <strong>Location:</strong> ${v.location}<br>
-                            <strong>Qualification:</strong> ${v.qualification}<br>
-                            <strong>Salary:</strong> ${v.salary}
-                        </div>
-                        <button class="btn ${isSelected ? 'btn-secondary' : 'btn-primary'} apply-btn" 
-                                onclick="toggleJob('${jobKey}')">
-                            ${isSelected ? 'Deselect Role' : 'Select This Role'}
-                        </button>
+
+                const card = document.createElement('div');
+                card.className = `vacancy-card ${isSelected ? 'selected' : ''}`;
+                card.innerHTML = `
+                    <div class="company">${v.company}</div>
+                    <h4>${v.title}</h4>
+                    <div class="details-box">
+                        <strong>Vacancies:</strong> ${v.vacancies}<br>
+                        <strong>Location:</strong> ${v.location}<br>
+                        <strong>Qualification:</strong> ${v.qualification}<br>
+                        <strong>Salary:</strong> ${v.salary}
                     </div>
+                    <button class="btn ${isSelected ? 'btn-secondary' : 'btn-primary'} apply-btn" 
+                            onclick="toggleJob('${jobKey}')">
+                        ${isSelected ? 'Deselect Role' : 'Select This Role'}
+                    </button>
                 `;
-            }).join('');
+                fragment.appendChild(card);
+            });
+
+            grid.innerHTML = '';
+            grid.appendChild(fragment);
         }
 
         function toggleJob(jobKey) {
@@ -466,28 +516,45 @@
             btn.disabled = true;
             btn.innerText = 'Applying...';
 
-            fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'applyJobs',
-                    mobile: mobile,
-                    fullName: candidateName,
-                    regId: regId,
-                    gender: gender,
-                    selectedJobs: selectedJobs
+            function attemptApply(retries = 3) {
+                fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'applyJobs',
+                        mobile: mobile,
+                        fullName: candidateName,
+                        regId: regId,
+                        gender: gender,
+                        selectedJobs: selectedJobs
+                    })
                 })
-            })
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        showApplicationCard();
-                        checkStatus(); // Refresh to lock
-                    } else {
-                        alert('Error submitting application.');
-                    }
-                    btn.disabled = false;
-                    btn.innerText = 'Apply';
-                });
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            showApplicationCard();
+                            checkStatus(); // Refresh to lock
+                        } else if (retries > 0) {
+                            console.warn(`Apply failed, retrying... (${retries} left)`);
+                            setTimeout(() => attemptApply(retries - 1), 1500);
+                        } else {
+                            alert('Server is busy due to high traffic. Your selections are saved locally, please click Apply again in a few moments.');
+                            btn.disabled = false;
+                            btn.innerText = 'Apply';
+                        }
+                    })
+                    .catch(err => {
+                        if (retries > 0) {
+                            console.warn("Network error, retrying...", err);
+                            setTimeout(() => attemptApply(retries - 1), 1500);
+                        } else {
+                            alert('Connection error. Please check your internet and try again.');
+                            btn.disabled = false;
+                            btn.innerText = 'Apply';
+                        }
+                    });
+            }
+
+            attemptApply();
         };
 
         function showApplicationCard() {
