@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 filename: `KASE_AdmitCard_${regId.replace(/\//g, '_')}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
-                    scale: 2,
+                    scale: 3,
                     useCORS: true,
                     letterRendering: true,
                     scrollY: 0,
@@ -232,11 +232,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
+            const originalText = downloadBtn.innerText;
             downloadBtn.innerText = 'Generating PDF...';
             downloadBtn.disabled = true;
 
             html2pdf().from(element).set(opt).save().then(() => {
-                downloadBtn.innerText = 'Download Admit Card (PDF)';
+                downloadBtn.innerText = originalText;
+                downloadBtn.disabled = false;
+            }).catch(err => {
+                console.error("PDF Generate Error:", err);
+                downloadBtn.innerText = originalText;
                 downloadBtn.disabled = false;
             });
         });
@@ -244,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form Submission to Google Sheet
     const form = document.getElementById('placementForm');
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyYGskWMk16ibanumSnjuoI5vO4k88b67UceocRrzMk3awwOSYYEOdbaefB5JfiSro/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyvI1SxTqioDr9ubaeykXpOODg8nxhAuhc-OuUpnTBhGR8KE3iE7Ryh45l0erADDEQ/exec';
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -256,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerText = 'Submitting...';
 
         const formData = new FormData(form);
-        const data = {};
+        const data = { action: 'register' };
         const preferredSectors = [];
 
         formData.forEach((value, key) => {
@@ -306,20 +311,15 @@ document.addEventListener('DOMContentLoaded', () => {
         })
             .then(res => res.json())
             .then(result => {
-                // Populate Admit Card View
-                document.getElementById('displayRegId').innerText = result.regId || "KASE/PD/NM/0000";
-                document.getElementById('displayName').innerText = data.fullName;
-                document.getElementById('displayQual').innerText = data.qualification;
-                document.getElementById('displayAddress').innerHTML = displayAddress;
-
-                // Populate Sectors as numbered list
-                const sectorHtml = preferredSectors.map((s, i) => `${i + 1}. ${s}`).join('<br>');
-                document.getElementById('displaySectors').innerHTML = sectorHtml;
-
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden'; // Lock scroll
-                form.reset();
-                expDetails.classList.add('hidden');
+                if (result.success) {
+                    modal.style.display = 'flex';
+                    modal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                    form.reset();
+                    expDetails.classList.add('hidden');
+                } else {
+                    alert('Error: ' + (result.error || 'Submission failed'));
+                }
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalText;
             })
