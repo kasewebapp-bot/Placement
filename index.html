@@ -16,11 +16,13 @@
 <body>
     <header class="header">
         <nav class="container">
-            <div class="logo">
-                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg"
-                    alt="Company Logo">
+            <div class="logo" style="display: flex; align-items: center; gap: 1rem;">
+                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg" alt="KASE Logo"
+                    style="height: 50px;">
+                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif"
+                    alt="ODEPEC Logo" style="height: 50px;">
             </div>
-            <a href="#register" class="btn btn-primary">Register Now</a>
+            <a href="login.html" class="btn btn-primary">Candidate Login</a>
         </nav>
     </header>
 
@@ -94,8 +96,9 @@
             <div class="container">
                 <div class="form-container">
                     <h2 class="section-title">Registration Form</h2>
-                    <p class="section-subtitle">Please fill in your details to register. <br><strong>Helpline:</strong>
-                        9447791540, 9895113603</p>
+                    <p class="section-subtitle">Please fill in your details to register. <br><strong>Already
+                            registered?</strong> <a href="login.html" class="login-link">Login
+                            Here</a>
 
                     <form id="placementForm">
                         <div class="form-section">
@@ -125,11 +128,26 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="mobile">Mobile Number (Required)</label>
-                                    <input type="tel" id="mobile" name="mobile" placeholder="Mobile Number" required>
+                                    <input type="tel" id="mobile" name="mobile" placeholder="10 Digit Mobile Number"
+                                        required pattern="[0-9]{10}" maxlength="10"
+                                        oninput="document.getElementById('display_username').value = this.value">
                                 </div>
                                 <div class="form-group">
                                     <label for="whatsapp">WhatsApp Number</label>
-                                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="WhatsApp Number">
+                                    <input type="tel" id="whatsapp" name="whatsapp"
+                                        placeholder="10 Digit WhatsApp Number" pattern="[0-9]{10}" maxlength="10">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="username">Login Username</label>
+                                    <input type="text" id="display_username" placeholder="Enter Mobile Above" readonly
+                                        style="background: #f8fafc; cursor: not-allowed;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Set Login Password</label>
+                                    <input type="password" id="password" name="password" placeholder="Create a password"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -298,54 +316,20 @@
                 <p><strong>Venue:</strong> LBS Institute Of Technology for Women, Poojappura, Thiruvananthapuram |
                     <strong>Time:</strong> 10:00 AM - 04:00 PM
                 </p>
-                <p><strong>Helpline:</strong> 9447791540, 9895113603</p>
+                <p><strong>Helpline:</strong> 9188925510, 7306402567</p>
                 <p>&copy; KASE 2026 Placement Drive. All rights reserved.</p>
             </div>
         </footer>
 
-        <div id="successModal" class="modal">
-            <div class="modal-content admit-card-modal">
-                <div id="admitCardPrint" class="admit-card">
-                    <div class="admit-card-header">
-                        <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg"
-                            alt="KASE Logo" class="admit-logo">
-                        <div class="admit-title-box">
-                            <h3>PLACEMENT DRIVE 2026</h3>
-                            <p>Registration Admit Card</p>
-                        </div>
-                    </div>
-                    <div class="admit-body">
-                        <div class="reg-id-box">
-                            <span class="label">Registration ID:</span>
-                            <span id="displayRegId" class="value highlight">KASE/PD/NM/----</span>
-                        </div>
-                        <div class="info-grid-admit">
-                            <div class="info-item">
-                                <span class="label">Name:</span>
-                                <span id="displayName" class="value">---</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="label">Qualification:</span>
-                                <span id="displayQual" class="value">---</span>
-                            </div>
-                            <div class="info-item w-100">
-                                <span class="label">Address:</span>
-                                <span id="displayAddress" class="value">---</span>
-                            </div>
-                            <div class="info-item w-100">
-                                <span class="label">Interested Sectors:</span>
-                                <span id="displaySectors" class="value">---</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="admit-footer">
-                        <p><strong>Venue:</strong> LBS Institute Of Technology for Women, Poojappura</p>
-                        <p><strong>Date:</strong> 28th Feb 2026 | <strong>Time:</strong> 10:00 AM</p>
-                    </div>
-                </div>
+        <!-- Success Modal -->
+        <div id="successModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-icon">✅</div>
+                <h2>Registration Successful!</h2>
+                <p>Your registration is successfully submitted. Please check your email for your username and password.
+                </p>
                 <div class="modal-actions">
-                    <button id="downloadAdmitCard" class="btn btn-primary btn-lg">Download Admit Card (PDF)</button>
-                    <button id="closeModal" class="btn btn-secondary">Close</button>
+                    <button class="btn btn-primary" onclick="location.reload()">OK</button>
                 </div>
             </div>
         </div>
