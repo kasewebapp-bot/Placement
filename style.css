@@ -327,6 +327,19 @@ textarea:focus {
     border-color: var(--primary);
 }
 
+.error-input {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+}
+
+.error-hint {
+    color: #ef4444;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+    display: block;
+}
+
 .radio-group,
 .checkbox-group {
     display: flex;
