@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Dashboard - Placement Drive 2026</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,6 +16,12 @@
             --white: #ffffff;
             --text: #1e293b;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
         }
 
         .dashboard-layout {
@@ -35,6 +40,7 @@
             position: fixed;
             height: 100vh;
             z-index: 100;
+            box-sizing: border-box;
         }
 
         .main-content {
@@ -76,17 +82,6 @@
             border: 1px solid #e2e8f0;
         }
 
-        .message-card h2 {
-            font-size: 1.8rem;
-            color: var(--text);
-            margin: 1rem 0;
-        }
-
-        .message-card p {
-            color: var(--secondary);
-            line-height: 1.6;
-        }
-
         .icon-bounce {
             font-size: 3.5rem;
             display: inline-block;
@@ -104,7 +99,7 @@
                 width: 100%; height: auto; position: fixed; top: 0; left: 0;
                 flex-direction: row; justify-content: space-between; padding: 0.75rem 1.5rem;
             }
-            .main-content { margin-left: 0; margin-top: 80px; padding: 1.5rem; }
+            .main-content { margin-left: 0; margin-top: 100px; padding: 1.5rem; }
             .nav-item:not(.logout-item) { display: none; }
         }
     </style>
@@ -114,8 +109,8 @@
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="logo" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
-                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg" alt="KASE Logo" style="height: 40px;">
-                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif" alt="ODEPEC Logo" style="height: 40px;">
+                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg" alt="KASE Logo" style="height: 35px;">
+                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif" alt="ODEPEC Logo" style="height: 35px;">
             </div>
             <div class="nav-item active">🏠 Dashboard</div>
             <div class="nav-item logout-item" style="margin-top: auto; color: #ef4444; cursor: pointer;" onclick="logout()">🚪 Logout</div>
@@ -123,7 +118,7 @@
 
         <main class="main-content">
             <header>
-                <h1 id="welcomeText" style="font-size: 2.2rem;">Welcome!</h1>
+                <h1 id="welcomeText" style="font-size: 2.2rem; margin: 0;">Welcome!</h1>
                 <p id="candidateId" style="color: var(--secondary); font-weight: 600; margin-top: 0.5rem;"></p>
             </header>
 
@@ -131,53 +126,38 @@
                 <div class="message-card">
                     <span class="icon-bounce">⏳</span>
                     <h2>Vacancies are updated soon...</h2>
-                    <p>We are currently finalizing the job details for the upcoming drive. Your registration is successful. Please check this dashboard later to apply for roles.</p>
+                    <p>We are currently finalizing the job details for the upcoming drive. <br>Please check back later to apply for roles.</p>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // Load user info from session
+        /** * IMPORTANT: In OneCompiler, 'login.html' usually doesn't exist.
+         * I've changed the redirect to 'index.html'. 
+         * Change 'index.html' below to your actual login filename.
+         **/
+        const loginPage = 'index.html'; 
+
         const candidateName = sessionStorage.getItem('candidate_name');
         const regId = sessionStorage.getItem('candidate_regId');
 
-        if (candidateName) {
+        // Check if session exists
+        if (!candidateName) {
+            console.log("No session found. Redirecting...");
+            // window.location.href = loginPage; // Uncomment this when running on your real server
+        } else {
             document.getElementById('welcomeText').innerText = `Welcome, ${candidateName}!`;
-        }
-        if (regId) {
-            document.getElementById('candidateId').innerText = `Reg ID: ${regId}`;
+            if (regId) {
+                document.getElementById('candidateId').innerText = `Reg ID: ${regId}`;
+            }
         }
 
-        // Logout function: Only goes to login when this is clicked
         function logout() {
             sessionStorage.clear();
-            window.location.href = 'login.html';
+            alert("Logging out...");
+            window.location.href = loginPage; 
         }
-    </script>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyARoLteIbD8oFPEtKJ3ZvhxkiOHNgfC-I4",
-            authDomain: "placements2026-free.firebaseapp.com",
-            projectId: "placements2026-free",
-            storageBucket: "placements2026-free.firebasestorage.app",
-            messagingSenderId: "672350914241",
-            appId: "1:672350914241:web:171f23d75e76a96f103640"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // Security check: Redirect to login ONLY if not authenticated
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = "login.html";
-            }
-        });
     </script>
 </body>
 
