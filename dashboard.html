@@ -8,12 +8,16 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --nav-width: 280px;
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --white: #ffffff;
+            --text: #1e293b;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
         .dashboard-layout {
@@ -58,85 +62,32 @@
             color: var(--white);
         }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .vacancy-card {
+        /* Maintenance Message Styling */
+        .coming-soon-card {
             background: var(--white);
-            padding: 2rem;
-            border-radius: 1.25rem;
-            box-shadow: var(--shadow);
-            border: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .vacancy-card .company {
-            font-weight: 800;
-            color: var(--primary);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-        }
-
-        .vacancy-card h4 {
-            font-size: 1.3rem;
-            margin: 0;
-            color: var(--text);
-        }
-
-        .vacancy-card .details-box {
-            font-size: 0.9rem;
-            color: var(--secondary);
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            margin: 0.5rem 0;
-        }
-
-        .selection-panel {
-            position: sticky;
-            top: 2rem;
-            background: var(--white);
-            padding: 2rem;
+            padding: 4rem 2rem;
             border-radius: 1.5rem;
-            box-shadow: var(--shadow-lg);
-            margin-bottom: 2rem;
-            border: 2px solid var(--primary);
-            z-index: 10;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+            border: 1px solid #e2e8f0;
         }
 
-        .selected-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #f1f5f9;
-            font-weight: 600;
-        }
-
-        .remove-btn {
-            color: #ef4444;
-            cursor: pointer;
-            background: #fee2e2;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 0.8rem;
-        }
-
-        #profileForm .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
+        .coming-soon-card h2 {
+            font-size: 1.8rem;
+            color: var(--text);
             margin-bottom: 1rem;
+        }
+
+        .coming-soon-card p {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .loader-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
         }
 
         @media (max-width: 1024px) {
@@ -145,39 +96,16 @@
                 height: auto;
                 position: fixed;
                 top: 0;
-                left: 0;
                 flex-direction: row;
                 justify-content: space-between;
-                align-items: center;
                 padding: 0.75rem 1.5rem;
-                box-shadow: var(--shadow);
             }
-
             .main-content {
                 margin-left: 0;
-                padding: 1.5rem;
                 margin-top: 80px;
-                /* Offset for fixed sidebar */
+                padding: 1.5rem;
             }
-
-            .sidebar .logo {
-                display: block !important;
-                margin-bottom: 0 !important;
-            }
-
-            .sidebar .logo img {
-                height: 35px !important;
-            }
-
-            .nav-item:not(.logout-item) {
-                display: none;
-                /* Hide 'Job Vacancies' text on mobile since it's the only page */
-            }
-
-            .logout-item {
-                margin-top: 0 !important;
-                padding: 0.5rem !important;
-            }
+            .nav-item:not(.logout-item) { display: none; }
         }
     </style>
 </head>
@@ -186,14 +114,11 @@
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="logo" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
-                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg" alt="KASE Logo"
-                    style="height: 40px;">
-                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif"
-                    alt="ODEPEC Logo" style="height: 40px;">
+                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg" alt="KASE Logo" style="height: 40px;">
+                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif" alt="ODEPEC Logo" style="height: 40px;">
             </div>
-            <div class="nav-item active">💼 Job Vacancies</div>
-            <div class="nav-item logout-item" style="margin-top: auto; color: #ef4444;" onclick="logout()">🚪 Logout
-            </div>
+            <div class="nav-item active">🔔 Announcements</div>
+            <div class="nav-item logout-item" style="margin-top: auto; color: #ef4444; cursor: pointer;" onclick="logout()">🚪 Logout</div>
         </aside>
 
         <main class="main-content">
@@ -202,411 +127,63 @@
                 <p id="candidateId" style="color: var(--secondary); font-weight: 600;"></p>
             </header>
 
-            <!-- Job Application Tab (Default and Only) -->
-            <div id="applyTab" class="tab-content">
-                <div class="selection-panel">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <div class="selection-count">Selected Job Roles: <span id="count"
-                                    style="color: var(--primary);">0</span>/4</div>
-                            <p style="font-size: 0.9rem; color: var(--secondary);">You can select up to 4 roles across
-                                different companies.</p>
-                        </div>
-                        <button id="finalApply" class="btn btn-primary btn-lg" disabled>Apply</button>
-                    </div>
-                    <div id="selectedList" style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem;"></div>
-                </div>
-
-                <div class="form-group">
-                    <label style="font-size: 1.2rem; margin-bottom: 1rem;">Browse vacancies by Sector</label>
-                    <select id="sectorFilter" style="max-width: 500px; padding: 1rem;">
-                        <option value="">Loading Sectors...</option>
-                    </select>
-                </div>
-
-                <div id="vacancyGrid" class="card-grid">
-                    <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--secondary);">
-                        <h3>Loading vacancies...</h3>
-                    </div>
-                </div>
-
-                <!-- My Applications View (Hidden by default) -->
-                <div id="appliedView" style="display: none; margin-top: 2rem;">
-                    <h2 style="margin-bottom: 1.5rem;">My Job Applications</h2>
-                    <div class="card-grid" id="appliedList"></div>
-                    <div
-                        style="margin-top: 2rem; background: #e0f2fe; padding: 1.5rem; border-radius: 1rem; border: 1px dashed var(--primary);">
-                        <p style="font-weight: 600; color: var(--primary);">Notice: Your applications have been
-                            submitted. You cannot edit or add more roles at this stage. Please contact support if you
-                            need to make changes.</p>
-                        <button class="btn btn-primary" style="margin-top: 1rem;"
-                            onclick="showApplicationCard()">Download My Application Card</button>
-                    </div>
-                </div>
+            <div id="maintenanceView" class="coming-soon-card">
+                <span class="loader-icon">⏳</span>
+                <h2>Vacancies are updated soon...</h2>
+                <p>We are currently updating the job portal with new opportunities. <br> Please check back in a short while.</p>
             </div>
+
+            <div id="applyTab" style="display: none;">
+                </div>
         </main>
     </div>
 
-    <!-- Job Application Card Modal -->
-    <div id="applyModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div id="applicationCard" class="admit-card" style="margin: 0 auto;">
-                <div class="admit-card-header" style="display: flex; align-items: center; gap: 1rem;">
-                    <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg"
-                        alt="KASE Logo" class="admit-logo" style="height: 40px;">
-                    <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif"
-                        alt="ODEPEC Logo" class="admit-logo" style="height: 40px;">
-                    <div class="admit-title-box">
-                        <h3>JOB APPLICATION CARD</h3>
-                        <p>Placement Drive 2026</p>
-                    </div>
-                </div>
-                <div class="admit-body">
-                    <div class="reg-id-box">
-                        <span class="label">Candidate Reg ID:</span>
-                        <span id="cardRegId" class="value highlight"></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">Name:</span>
-                        <span id="cardName" class="value"></span>
-                    </div>
-                    <div class="info-item w-100">
-                        <span class="label">Applied Job Roles:</span>
-                        <div id="cardJobs" class="value" style="font-size: 1.1rem; padding-top: 0.5rem;"></div>
-                    </div>
-                </div>
-                <div class="admit-footer">
-                    <p>Present this card to the HR at the stall for interview.</p>
-                    <p><strong>Venue:</strong> LBS Institute For Women, Poojappura</p>
-                </div>
-            </div>
-            <div class="modal-actions" style="margin-top: 2rem;">
-                <button class="btn btn-primary btn-lg" onclick="downloadApplicationCard()">Download PDF Admit
-                    Card</button>
-                <button class="btn btn-secondary"
-                    onclick="document.getElementById('applyModal').style.display='none'">Close</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        const csvURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRA1fcEyLeE8zkgQ0BWT3zTVd2pNcmcZmdlF9qS9Awzx4W4g16uwhM9a__3Rwo3fBtJ79kLUeqDsQLf/pub?gid=0&single=true&output=csv';
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyvI1SxTqioDr9ubaeykXpOODg8nxhAuhc-OuUpnTBhGR8KE3iE7Ryh45l0erADDEQ/exec';
         const mobile = sessionStorage.getItem('candidate_mobile');
         const candidateName = sessionStorage.getItem('candidate_name');
         const regId = sessionStorage.getItem('candidate_regId');
-        const gender = sessionStorage.getItem('candidate_gender') || "";
 
         // Personalize Greeting
         if (candidateName) {
             document.getElementById('welcomeText').innerText = `Welcome, ${candidateName}!`;
         }
-
-        let allVacancies = [];
-        let selectedJobs = [];
-
-        // Initial fetch
-        checkStatus();
-        fetchVacancies();
-
-        function checkStatus() {
-            fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'checkApplicationStatus', regId: regId })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.applied) {
-                        lockDashboard(data.jobs);
-                    }
-                });
+        if (regId) {
+            document.getElementById('candidateId').innerText = `ID: ${regId}`;
         }
 
-        function lockDashboard(jobs) {
-            document.querySelector('.selection-panel').style.display = 'none';
-            document.querySelector('.form-group').style.display = 'none';
-            document.getElementById('vacancyGrid').style.display = 'none';
-            document.getElementById('appliedView').style.display = 'block';
-
-            selectedJobs = jobs.map(j => `${j.company} - ${j.role}`);
-
-            const list = document.getElementById('appliedList');
-            list.innerHTML = jobs.map(j => `
-                <div class="vacancy-card">
-                    <div class="company">${j.company}</div>
-                    <h4>${j.role}</h4>
-                    <div style="margin-top: 1rem; padding: 0.5rem 1rem; background: #fef3c7; color: #92400e; border-radius: 0.5rem; font-weight: 600; font-size: 0.9rem; display: inline-block;">
-                        Status: ${j.status}
-                    </div>
-                </div>
-            `).join('');
+        // Logic to logout
+        function logout() { 
+            sessionStorage.clear(); 
+            window.location.href = 'login.html'; 
         }
 
-        function fetchVacancies() {
-            const CACHE_KEY = 'vacancies_data';
-            const CACHE_TIME_KEY = 'vacancies_time';
-            const CACHE_TTL = 15 * 60 * 1000; // 15 Minutes
+        /* NOTE: fetchVacancies() and checkStatus() are not called here 
+           to ensure only the "Updated Soon" message is visible.
+        */
+    </script>
 
-            const cachedData = localStorage.getItem(CACHE_KEY);
-            const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
-            const now = Date.now();
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
-            if (cachedData && cachedTime && (now - cachedTime < CACHE_TTL)) {
-                console.log("Loading vacancies from cache...");
-                allVacancies = JSON.parse(cachedData);
-                populateSectors(allVacancies);
-                return;
-            }
-
-            console.log("Fetching from CSV...");
-            fetch(csvURL)
-                .then(res => {
-                    if (!res.ok) throw new Error("CSV response not OK");
-                    return res.text();
-                })
-                .then(csv => {
-                    if (!csv || csv.trim() === "") throw new Error("Empty CSV");
-                    allVacancies = parseCSV(csv);
-                    if (allVacancies.length === 0) throw new Error("No vacancies parsed");
-
-                    // Update Cache
-                    localStorage.setItem(CACHE_KEY, JSON.stringify(allVacancies));
-                    localStorage.setItem(CACHE_TIME_KEY, now.toString());
-
-                    populateSectors(allVacancies);
-                })
-                .catch(err => {
-                    console.warn('CSV Fetch failed, falling back to GAS API:', err);
-                    // Fallback to GAS API
-                    fetch(scriptURL + '?action=getVacancies')
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.error) throw new Error(data.error);
-                            allVacancies = data;
-                            populateSectors(data);
-                        })
-                        .catch(err2 => {
-                            console.error('All fetch attempts failed:', err2);
-                            document.getElementById('vacancyGrid').innerHTML = '<h3>Error loading vacancies. Please check your internet or spreadsheet permissions and refresh.</h3>';
-                        });
-                });
-        }
-
-        function parseCSV(csv) {
-            const lines = csv.split(/\r?\n/);
-            if (lines.length < 2) return [];
-
-            // Improved CSV header parsing (accounting for quotes)
-            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-
-            return lines.slice(1).filter(line => line.trim() !== "").map(line => {
-                // Split by comma, but handle basic quoted values (no complex nested comma handling)
-                const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
-                const obj = {};
-                headers.forEach((header, i) => {
-                    if (!header) return;
-                    const cleanKey = header.toLowerCase();
-                    if (cleanKey.includes("organization")) obj.company = values[i] || "";
-                    else if (cleanKey.includes("sector")) obj.sector = values[i] || "";
-                    else if (cleanKey.includes("job title")) obj.title = values[i] || "";
-                    else if (cleanKey.includes("vacancies")) obj.vacancies = values[i] || "";
-                    else if (cleanKey.includes("location")) obj.location = values[i] || "";
-                    else if (cleanKey.includes("qualification")) obj.qualification = values[i] || "";
-                    else if (cleanKey.includes("salary") || cleanKey.includes("ctc")) obj.salary = values[i] || "";
-                    else obj[header] = values[i] || "";
-                });
-                return obj;
-            });
-        }
-
-        function populateSectors(data) {
-            const filter = document.getElementById('sectorFilter');
-            filter.innerHTML = '<option value="">Choose a Sector...</option>';
-
-            const sectors = [...new Set(data.map(v => v.sector))].filter(s => s).sort();
-
-            sectors.forEach(s => {
-                const opt = document.createElement('option');
-                opt.value = opt.innerText = s;
-                filter.appendChild(opt);
-            });
-
-            document.getElementById('vacancyGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--secondary);"><h3>Please select a sector above to view vacancies</h3></div>';
-        }
-
-        document.getElementById('sectorFilter').onchange = (e) => {
-            const sector = e.target.value;
-            if (!sector) {
-                document.getElementById('vacancyGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--secondary);"><h3>Please select a sector above to view vacancies</h3></div>';
-                return;
-            }
-            const filtered = allVacancies.filter(v => v.sector === sector);
-            renderVacancies(filtered);
+        const firebaseConfig = {
+            apiKey: "AIzaSyARoLteIbD8oFPEtKJ3ZvhxkiOHNgfC-I4",
+            authDomain: "placements2026-free.firebaseapp.com",
+            projectId: "placements2026-free",
+            storageBucket: "placements2026-free.firebasestorage.app",
+            messagingSenderId: "672350914241",
+            appId: "1:672350914241:web:171f23d75e76a96f103640"
         };
 
-        function renderVacancies(vacancies) {
-            const grid = document.getElementById('vacancyGrid');
-            if (vacancies.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--secondary);"><h3>No vacancies found in this sector.</h3></div>';
-                return;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Protect Dashboard: If not logged in, redirect to login page
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html";
             }
-
-            // Using DocumentFragment for performance with 2000+ users
-            const fragment = document.createDocumentFragment();
-            vacancies.forEach(v => {
-                const jobKey = `${v.company} - ${v.title}`;
-                const isSelected = selectedJobs.includes(jobKey);
-
-                const card = document.createElement('div');
-                card.className = `vacancy-card ${isSelected ? 'selected' : ''}`;
-                card.innerHTML = `
-                    <div class="company">${v.company}</div>
-                    <h4>${v.title}</h4>
-                    <div class="details-box">
-                        <strong>Vacancies:</strong> ${v.vacancies}<br>
-                        <strong>Location:</strong> ${v.location}<br>
-                        <strong>Qualification:</strong> ${v.qualification}<br>
-                        <strong>Salary:</strong> ${v.salary}
-                    </div>
-                    <button class="btn ${isSelected ? 'btn-secondary' : 'btn-primary'} apply-btn" 
-                            onclick="toggleJob('${jobKey}')">
-                        ${isSelected ? 'Deselect Role' : 'Select This Role'}
-                    </button>
-                `;
-                fragment.appendChild(card);
-            });
-
-            grid.innerHTML = '';
-            grid.appendChild(fragment);
-        }
-
-        function toggleJob(jobKey) {
-            const idx = selectedJobs.indexOf(jobKey);
-            if (idx > -1) {
-                selectedJobs.splice(idx, 1);
-            } else {
-                if (selectedJobs.length >= 4) {
-                    alert("Maximum 4 selections allowed.");
-                    return;
-                }
-                selectedJobs.push(jobKey);
-            }
-            updateSelection();
-
-            const sector = document.getElementById('sectorFilter').value;
-            if (sector) {
-                renderVacancies(allVacancies.filter(v => v.sector === sector));
-            }
-        }
-
-        function updateSelection() {
-            document.getElementById('count').innerText = selectedJobs.length;
-            document.getElementById('finalApply').disabled = selectedJobs.length === 0;
-            const list = document.getElementById('selectedList');
-            list.innerHTML = selectedJobs.map(j => `
-                <div class="selected-item" style="background: #e0f2fe; padding: 0.5rem 1rem; border-radius: 2rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <span>${j}</span>
-                    <span class="remove-btn" onclick="toggleJob('${j}')">×</span>
-                </div>
-            `).join('');
-        }
-
-        document.getElementById('finalApply').onclick = () => {
-            const btn = document.getElementById('finalApply');
-            btn.disabled = true;
-            btn.innerText = 'Applying...';
-
-            function attemptApply(retries = 3) {
-                fetch(scriptURL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'applyJobs',
-                        mobile: mobile,
-                        fullName: candidateName,
-                        regId: regId,
-                        gender: gender,
-                        selectedJobs: selectedJobs
-                    })
-                })
-                    .then(res => res.json())
-                    .then(result => {
-                        if (result.success) {
-                            showApplicationCard();
-                            checkStatus(); // Refresh to lock
-                        } else if (retries > 0) {
-                            console.warn(`Apply failed, retrying... (${retries} left)`);
-                            setTimeout(() => attemptApply(retries - 1), 1500);
-                        } else {
-                            alert('Server is busy due to high traffic. Your selections are saved locally, please click Apply again in a few moments.');
-                            btn.disabled = false;
-                            btn.innerText = 'Apply';
-                        }
-                    })
-                    .catch(err => {
-                        if (retries > 0) {
-                            console.warn("Network error, retrying...", err);
-                            setTimeout(() => attemptApply(retries - 1), 1500);
-                        } else {
-                            alert('Connection error. Please check your internet and try again.');
-                            btn.disabled = false;
-                            btn.innerText = 'Apply';
-                        }
-                    });
-            }
-
-            attemptApply();
-        };
-
-        function showApplicationCard() {
-            document.getElementById('cardRegId').innerText = regId;
-            document.getElementById('cardName').innerText = candidateName;
-            document.getElementById('cardJobs').innerHTML = selectedJobs.map((j, i) => `<b>${i + 1}.</b> ${j}`).join('<br>');
-            document.getElementById('applyModal').style.display = 'flex';
-        }
-
-        function downloadApplicationCard() {
-            const element = document.getElementById('applicationCard');
-            const originalWidth = element.style.width;
-
-            // Ensure we capture from the top and the card is properly sized
-            window.scrollTo(0, 0);
-            element.style.width = "680px";
-            element.style.margin = "0"; // Remove centered margin for capture
-
-            const opt = {
-                margin: 0.5,
-                filename: `Application_AdmitCard_${regId}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: {
-                    scale: 3,
-                    useCORS: true,
-                    letterRendering: true,
-                    scrollY: 0,
-                    scrollX: 0
-                },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            const btn = event.target;
-            const originalText = btn.innerText;
-            btn.innerText = 'Generating PDF...';
-            btn.disabled = true;
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                element.style.width = originalWidth;
-                element.style.margin = "0 auto";
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }).catch(err => {
-                console.error("PDF Generate Error:", err);
-                btn.innerText = originalText;
-                btn.disabled = false;
-                alert("Error generating PDF. Please try again.");
-            });
-        }
-
-        function logout() { sessionStorage.clear(); window.location.href = 'index.html'; }
+        });
     </script>
 </body>
-
 </html>
