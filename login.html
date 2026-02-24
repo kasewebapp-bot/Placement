@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Login - Placement Drive 2026</title>
+
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+
     <style>
         .login-container {
             min-height: calc(100vh - 80px);
@@ -71,14 +71,15 @@
 </head>
 
 <body>
+
     <header class="header">
         <div class="container">
             <nav>
-                <div class="logo" style="display: flex; align-items: center; gap: 1rem;">
+                <div class="logo" style="display:flex;align-items:center;gap:1rem;">
                     <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg"
-                        alt="KASE Logo" style="height: 50px;">
+                        style="height:50px;">
                     <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif"
-                        alt="ODEPEC Logo" style="height: 50px;">
+                        style="height:50px;">
                 </div>
             </nav>
         </div>
@@ -86,71 +87,111 @@
 
     <main class="login-container">
         <div class="login-card">
+
             <div class="login-header">
                 <h2>Candidate Login</h2>
                 <p>Access your profile and apply for jobs</p>
             </div>
+
             <form id="loginForm">
+
                 <div class="form-group">
-                    <label for="mobile">Mobile Number</label>
-                    <input type="tel" id="mobile" name="mobile" placeholder="10 Digit Mobile Number" required
-                        pattern="[0-9]{10}" maxlength="10">
+                    <label>Mobile Number</label>
+                    <input type="tel" id="mobile" required pattern="[0-9]{10}" maxlength="10">
                 </div>
+
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <label>Password</label>
+                    <input type="password" id="password" required>
                 </div>
-                <button type="submit" class="btn btn-primary login-btn">Login to Dashboard</button>
+
+                <button type="submit" class="btn btn-primary login-btn">
+                    Login to Dashboard
+                </button>
+
             </form>
+
             <div class="register-link">
                 Don't have an account? <a href="index.html#register">Register Now</a>
             </div>
+
         </div>
     </main>
 
+    <!-- Firebase SDKs (Compatibility Mode) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- 🔥 FIREBASE LOGIN SCRIPT -->
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyvI1SxTqioDr9ubaeykXpOODg8nxhAuhc-OuUpnTBhGR8KE3iE7Ryh45l0erADDEQ/exec';
-        const loginForm = document.getElementById('loginForm');
+        const firebaseConfig = {
+            apiKey: "AIzaSyARoLteIbD8oFPEtKJ3ZvhxkiOHNgfC-I4",
+            authDomain: "placements2026-free.firebaseapp.com",
+            projectId: "placements2026-free",
+            storageBucket: "placements2026-free.firebasestorage.app",
+            messagingSenderId: "672350914241",
+            appId: "1:672350914241:web:171f23d75e76a96f103640"
+        };
 
-        loginForm.addEventListener('submit', e => {
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+
             e.preventDefault();
-            const submitBtn = loginForm.querySelector('button');
-            const originalText = submitBtn.innerText;
+
+            const mobile = document.getElementById("mobile").value;
+            const password = document.getElementById("password").value;
+            const fakeEmail = mobile + "@placement.com";
+
+            const submitBtn = document.querySelector(".login-btn");
             submitBtn.disabled = true;
-            submitBtn.innerText = 'Logging in...';
+            submitBtn.innerText = "Logging in...";
 
-            const data = {
-                action: 'login',
-                mobile: loginForm.mobile.value,
-                password: loginForm.password.value
-            };
+            try {
 
-            fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            })
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        sessionStorage.setItem('candidate_mobile', data.mobile);
-                        sessionStorage.setItem('candidate_name', result.fullName);
-                        sessionStorage.setItem('candidate_regId', result.regId);
-                        sessionStorage.setItem('candidate_gender', result.gender);
-                        window.location.href = 'dashboard.html';
-                    } else {
-                        alert(result.error || 'Login failed. Please check your credentials.');
-                        submitBtn.disabled = false;
-                        submitBtn.innerText = originalText;
-                    }
-                })
-                .catch(err => {
-                    console.error('Login Error:', err);
-                    alert('Connection error. Please try again.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = originalText;
-                });
+                await auth.signInWithEmailAndPassword(fakeEmail, password);
+
+                const docSnap = await db.collection("users").doc(mobile).get();
+
+                if (docSnap.exists) {
+                    const data = docSnap.data();
+
+                    // ✅ DEBUG: Log ALL Firestore fields so you can see exact field names
+                    console.log("✅ Firestore document data:", data);
+                    console.log("All field keys:", Object.keys(data));
+
+                    sessionStorage.setItem('candidate_mobile', mobile);
+                    sessionStorage.setItem('candidate_name', data.fullName || data.name || data.Name || "");
+                    sessionStorage.setItem('candidate_gender', data.gender || data.Gender || "");
+
+                    // ✅ FIX: Try every possible field name your Firestore doc might use for Reg ID
+                    const regId = data.regId || data.RegId || data.reg_id || data.registrationId || data.candidateId || data.id || "";
+                    sessionStorage.setItem('candidate_regId', regId);
+
+                    console.log("Stored regId in sessionStorage:", regId);
+                } else {
+                    console.warn("No Firestore document found for mobile:", mobile);
+                }
+
+                window.location.href = "dashboard.html";
+
+            } catch (error) {
+
+                console.error("Login error:", error);
+                alert("Invalid mobile or password");
+
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Login to Dashboard";
+            }
+
         });
     </script>
+
+
 </body>
 
 </html>
