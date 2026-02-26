@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form Submission Logic
     const form = document.getElementById('placementForm');
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyvI1SxTqioDr9ubaeykXpOODg8nxhAuhc-OuUpnTBhGR8KE3iE7Ryh45l0erADDEQ/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyYGskWMk16ibanumSnjuoI5vO4k88b67UceocRrzMk3awwOSYYEOdbaefB5JfiSro/exec';
 
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Send Address fields individually to GAS (Matches Apps Script expectation)
                 data.houseInfo = formData.get('houseInfo') || "";
                 data.place = formData.get('place') || "";
-                data.PinCode = formData.get('pincode') || "";
+                data.PinCode = formData.get('PinCode') || "";
                 data.panchayat = formData.get('panchayat') || "";
 
                 // Split sectors into 3 separate fields (for sheet columns)
@@ -359,6 +359,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Join location array
                 if (data.location) data.location = data.location.join(', ');
+
+                // Explicitly set PWD field
+                data.pwd = formData.get('pwd') || "No";
 
                 // 3. Register in Google Sheets (Get official regId)
                 const sheetsRes = await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
@@ -386,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     email: data.email,
                     district: data.district,
                     qualification: data.qualification,
+                    pwd: data.pwd,
                     regDate: new Date().toISOString()
                 });
 
