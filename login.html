@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Candidate Login - Placement Drive 2026</title>
 
     <link rel="stylesheet" href="style.css">
@@ -29,6 +29,20 @@
             width: 100%;
             max-width: 450px;
             text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .logo img {
+                height: 40px !important;
+            }
         }
 
         .login-header {
@@ -167,6 +181,7 @@
                     sessionStorage.setItem('candidate_mobile', mobile);
                     sessionStorage.setItem('candidate_name', data.fullName || data.name || data.Name || "");
                     sessionStorage.setItem('candidate_gender', data.gender || data.Gender || "");
+                    sessionStorage.setItem('candidate_pwd', data.pwd || "No");
 
                     // ✅ FIX: Try every possible field name your Firestore doc might use for Reg ID
                     const regId = data.regId || data.RegId || data.reg_id || data.registrationId || data.candidateId || data.id || "";
