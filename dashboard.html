@@ -5,206 +5,934 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Dashboard - Placement Drive 2026</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --nav-width: 280px;
             --primary: #2563eb;
             --secondary: #64748b;
-            --white: #ffffff;
+            --white: #fff;
             --text: #1e293b;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            font-family: 'Outfit', sans-serif;
+            font-family: "Outfit", sans-serif;
             color: var(--text);
-        }
-
-        .dashboard-layout {
-            display: flex;
-            min-height: 100vh;
             background: #f1f5f9;
+            padding-top: 80px;
+            /* Space for fixed header */
         }
 
-        .sidebar {
-            width: var(--nav-width);
-            background: var(--white);
-            border-right: 1px solid #e2e8f0;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
+        /* Top Navigation Redesign */
+        .top-nav {
             position: fixed;
-            height: 100vh;
-            z-index: 100;
-            box-sizing: border-box;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: #fff;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 1000;
+            box-shadow: var(--shadow);
         }
 
-        .main-content {
-            margin-left: var(--nav-width);
-            flex: 1;
-            padding: 2rem 3rem;
-        }
-
-        .nav-item {
-            padding: 1rem 1.5rem;
-            border-radius: 0.75rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--secondary);
+        .logo-box {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
-        .nav-item.active {
-            background: var(--primary);
-            color: var(--white);
+        .logo-box img {
+            height: 45px;
+            object-fit: contain;
         }
 
-        .maintenance-container {
+        .nav-actions {
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 60vh;
+            gap: 1rem;
         }
 
-        .message-card {
-            background: var(--white);
-            padding: 3rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            box-shadow: var(--shadow);
-            max-width: 600px;
+        .btn {
+            padding: .6rem 1.2rem;
+            border-radius: .6rem;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: .9rem;
+            transition: all .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--text);
             border: 1px solid #e2e8f0;
         }
 
-        .message-card h2 {
-            font-size: 1.8rem;
-            color: var(--text);
-            margin: 1rem 0;
+        .btn-lg {
+            padding: .9rem 2rem;
+            font-size: 1rem;
         }
 
-        .message-card p {
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: .9rem;
             color: var(--secondary);
-            line-height: 1.6;
         }
 
-        .icon-bounce {
-            font-size: 3.5rem;
+        .form-group select,
+        .form-group input {
+            padding: .75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: .75rem;
+            font-family: inherit;
+            font-size: .95rem;
+            color: var(--text);
+            background: #fff;
+            outline: none;
+            transition: all .2s;
+            width: 100%;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            display: flex;
+            align-items: flex-start;
+            /* Changed from center to avoid pushing top off-screen */
+            justify-content: center;
+            z-index: 2000;
+            padding: 2rem 1rem;
+            backdrop-filter: blur(6px);
+            overflow-y: auto;
+            /* Ensure modal itself can scroll */
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .admit-card {
+            border: 4px solid #2563eb;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            background: #fff;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .admit-card-header {
+            background: #2563eb;
+            color: #fff;
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .admit-body {
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .admit-info-row {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 1rem;
+        }
+
+        .info-grid-admit {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .reg-id-badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+        }
+
+        .candidate-name-large {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2563eb;
+            letter-spacing: -0.02em;
+        }
+
+        .jobs-table-admit {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            background: #fff;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .jobs-table-admit th {
+            background: #f8fafc;
+            color: #64748b;
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .jobs-table-admit td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        .jobs-table-admit tr:last-child td {
+            border-bottom: none;
+        }
+
+        .room-col {
+            font-weight: 700;
+            color: #2563eb;
+            width: 80px;
+            text-align: center;
+        }
+
+        .admit-footer {
+            background: #f8fafc;
+            padding: 1.5rem 2.5rem;
+            font-size: .9rem;
+            color: var(--secondary);
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .admit-footer p {
+            margin-bottom: .4rem;
+        }
+
+        /* Print Specifics */
+        #admitPrintArea {
+            padding: 40px;
+            /* Crucial padding to avoid PDF clipping */
+            background: #fff;
             display: inline-block;
-            animation: bounce 2s infinite;
+            width: 100%;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-20px);}
-            60% {transform: translateY(-10px);}
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            width: 100%;
         }
 
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 100%; height: auto; position: fixed; top: 0; left: 0;
-                flex-direction: row; justify-content: space-between; padding: 0.75rem 1.5rem;
+        .stats-bar {
+            background: #fff;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            border: 1px solid #f1f5f9;
+        }
+
+        .stat-num {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: .8rem;
+            color: var(--secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .selection-panel {
+            position: sticky;
+            top: 95px;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 1.25rem;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+            border: 2px solid var(--primary);
+            z-index: 100;
+        }
+
+        .vacancy-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #fff;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .vacancy-table th {
+            background: #f8fafc;
+            color: var(--secondary);
+            text-align: left;
+            padding: 1rem;
+            font-weight: 700;
+            font-size: .85rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .vacancy-table td {
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        /* Mobile Friendliness */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
             }
-            .main-content { margin-left: 0; margin-top: 80px; padding: 1.5rem; }
-            .main-content { margin-left: 0; margin-top: 100px; padding: 1.5rem; }
-            .nav-item:not(.logout-item) { display: none; }
+
+            .top-nav {
+                height: 70px;
+                padding: 0 1rem;
+            }
+
+            .logo-box img {
+                height: 32px;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr 1fr;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .logout-text {
+                display: none;
+            }
+
+            .info-grid-admit {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .admit-card-header {
+                padding: 1.5rem;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .admit-body {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="dashboard-layout">
-        <aside class="sidebar">
-            <div class="logo" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
-                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg" alt="KASE Logo" style="height: 35px;">
-                <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif" alt="ODEPEC Logo" style="height: 35px;">
+
+    <header class="top-nav">
+        <div class="logo-box">
+            <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg" alt="KASE">
+            <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif" alt="ODEPC">
+        </div>
+        <button class="btn btn-secondary" style="color:#ef4444;" onclick="logout()">
+            <span>🚪</span> <span class="logout-text">Logout</span>
+        </button>
+    </header>
+
+    <main class="main-content">
+        <header style="margin-bottom:1.5rem;">
+            <h1 id="welcomeText" style="font-size:2rem;font-weight:800;">Welcome!</h1>
+            <p id="candidateId" style="color:var(--secondary);font-weight:600;margin-top:.25rem;"></p>
+        </header>
+
+        <div class="stats-bar">
+            <div><span class="stat-num" id="statTotal">--</span><span class="stat-label">Vacancies</span></div>
+            <div><span class="stat-num" id="statCompanies">—</span><span class="stat-label">Companies</span>
             </div>
-            <div class="nav-item active">🏠 Dashboard</div>
-            <div class="nav-item logout-item" style="margin-top: auto; color: #ef4444; cursor: pointer;" onclick="logout()">🚪 Logout</div>
-        </aside>
+            <div><span class="stat-num" id="statRoles">—</span><span class="stat-label">Job Roles</span></div>
+            <div style="margin-left:auto;font-size:.8rem;color:var(--secondary);">📅 Placement Drive 2026</div>
+        </div>
 
-        <main class="main-content">
-            <header>
-                <h1 id="welcomeText" style="font-size: 2.2rem; margin: 0;">Welcome!</h1>
-                <p id="candidateId" style="color: var(--secondary); font-weight: 600; margin-top: 0.5rem;"></p>
-            </header>
+        <div id="applySection">
+            <div class="selection-panel">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
+                    <div>
+                        <div style="font-weight:700;font-size:1.05rem;">
+                            Selected: <span id="count" style="color:var(--primary);">0</span>/4 roles
+                        </div>
+                        <p style="font-size:.85rem;color:var(--secondary);margin-top:.2rem;">
+                            Select up to 4 roles, then click Apply.
+                        </p>
+                    </div>
+                    <button id="finalApply" class="btn btn-primary btn-lg" disabled>✅ Apply Now</button>
+                </div>
+                <div id="selectedList" style="margin-top:1.25rem;display:flex;flex-wrap:wrap;gap:.6rem;"></div>
+            </div>
 
-            <div class="maintenance-container">
-                <div class="message-card">
-                    <span class="icon-bounce">⏳</span>
-                    <h2>Vacancies are updated soon...</h2>
-                    <p>We are currently finalizing the job details for the upcoming drive. Your registration is successful. Please check this dashboard later to apply for roles.</p>
+            <div class="filter-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1rem;">
+                <div class="form-group">
+                    <label>🔍 Filter by Job Role</label>
+                    <select id="jobRoleFilter">
+                        <option value="">All Job Roles</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>🔎 Search (Company, Role, Location…)</label>
+                    <input type="text" id="globalSearch" placeholder="e.g. Sales, Trivandrum, Retail…">
                 </div>
             </div>
-        </main>
+            <div id="resultsCount" style="font-size:.85rem;color:var(--secondary);font-weight:600;margin-bottom:.5rem;">
+            </div>
+            <div id="vacancyGrid"></div>
+        </div>
+
+        <div id="appliedView" style="display:none;margin-top:1rem;">
+            <div
+                style="background:#dcfce7;border:1px solid #86efac;border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                <div style="font-size:2rem;">✅</div>
+                <div>
+                    <div style="font-weight:800;font-size:1.1rem;color:#166534;">Application Submitted
+                        Successfully!
+                    </div>
+                    <div style="font-size:.9rem;color:#166534;margin-top:.25rem;">Your selections have been
+                        saved.
+                        Download your admit card below.</div>
+                </div>
+                <button class="btn btn-primary" style="margin-left:auto;" onclick="showApplicationCard()">
+                    📄 Download Admit Card
+                </button>
+            </div>
+            <h2 style="margin-bottom:1rem;font-size:1.3rem;">My Applied Roles</h2>
+            <div class="card-grid" id="appliedList"></div>
+            <div
+                style="margin-top:1.5rem;background:#e0f2fe;padding:1.25rem;border-radius:1rem;border:1px dashed var(--primary);font-size:.9rem;color:var(--primary);font-weight:600;">
+                ⚠️ Applications are locked. Contact support if you need to make changes.
+            </div>
+        </div>
+    </main>
+    </div>
+
+    <div id="applyModal" class="modal" style="display:none;">
+        <div class="modal-content" style="padding: 0; background: #f8fafc; max-width: 850px;">
+            <div id="admitPrintAreaUI" style="padding: 40px; background: #fff;">
+                <div id="applicationCard"
+                    style="border: 4px solid #2563eb; border-radius: 1.25rem; overflow: hidden; background: #fff; width: 100%; max-width: 700px; margin: 0 auto; box-sizing: border-box; font-family: 'Outfit', sans-serif; color: #1e293b;">
+                    <div
+                        style="background: #2563eb; color: #fff; padding: 1.5rem 2.5rem; display: flex; align-items: center; gap: 1.5rem; box-sizing: border-box;">
+                        <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/kase-1-scaled_u5ygsl.jpg" alt="KASE"
+                            crossOrigin="anonymous"
+                            style="height:50px; background:#fff; padding:4px; border-radius:6px; display:block;">
+                        <img src="https://res.cloudinary.com/dbpyjdqt2/image/upload/v1771854785/odepc_prctuo.avif"
+                            alt="ODEPC" crossOrigin="anonymous"
+                            style="height:50px; background:#fff; padding:4px; border-radius:6px; display:block;">
+                        <div style="flex:1;">
+                            <h3 style="letter-spacing:1px; margin:0; font-size:1.2rem; font-weight:800; color:#fff;">JOB
+                                APPLICATION CARD</h3>
+                            <p style="opacity:0.9; margin:4px 0 0 0; font-size:0.9rem;">Placement Drive 2026</p>
+                        </div>
+                    </div>
+
+                    <div
+                        style="padding: 2.5rem; display: flex; flex-direction: column; gap: 2rem; box-sizing: border-box;">
+                        <div
+                            style="display: flex; align-items: baseline; gap: 1.5rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem; box-sizing: border-box;">
+                            <div style="flex:1;">
+                                <span
+                                    style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase; display:block; margin-bottom:5px;">Candidate
+                                    Name</span>
+                                <span id="cardName"
+                                    style="font-size: 2rem; font-weight: 800; color: #2563eb; letter-spacing: -0.02em; display:block;"></span>
+                            </div>
+                            <div
+                                style="background: #f1f5f9; color: #475569; padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.9rem; font-weight: 600; border: 1px solid #e2e8f0;">
+                                ID: <span id="cardRegId"></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span
+                                style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase; display:block; margin-bottom:12px;">Applied
+                                Job Roles</span>
+                            <table
+                                style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 1rem; background: #fff; border-radius: 0.5rem; overflow: hidden; border: 1px solid #f1f5f9;">
+                                <thead>
+                                    <tr style="background: #f8fafc; border-bottom: 2px solid #f1f5f9;">
+                                        <th
+                                            style="width:40px; color: #64748b; text-align: left; padding: 1rem; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                                            #</th>
+                                        <th
+                                            style="color: #64748b; text-align: left; padding: 1rem; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                                            Employer / Company</th>
+                                        <th
+                                            style="color: #64748b; text-align: left; padding: 1rem; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                                            Job Role</th>
+                                        <th
+                                            style="color: #2563eb; text-align: center; padding: 1rem; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; width: 80px;">
+                                            Room No.</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cardJobsTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: #f8fafc; padding: 1.5rem 2.5rem; font-size: .9rem; color: #64748b; border-top: 2px solid #e2e8f0; text-align: center; box-sizing: border-box;">
+                        <p style="font-weight:600; margin:0 0 0.4rem 0; color:#1e293b;">Present this card to the HR at
+                            the stall for interview.</p>
+                        <p style="margin:0 0 0.4rem 0;"><strong>Venue:</strong> LBS Institute For Women, Poojappura,
+                            Trivandrum</p>
+                        <p style="font-size: 0.8rem; margin: 0.8rem 0 0 0; opacity: 0.6;">Computer-generated: Valid for
+                            Placement Drive 2026</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions" style="padding: 2rem;">
+                <button class="btn btn-primary btn-lg" onclick="downloadApplicationCard(event)">
+                    ⬇️ Download PDF Admit Card
+                </button>
+                <button class="btn btn-secondary" onclick="document.getElementById('applyModal').style.display='none'">
+                    Close
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Load user info from session
-        /** * IMPORTANT: In OneCompiler, 'login.html' usually doesn't exist.
-         * I've changed the redirect to 'index.html'. 
-         * Change 'index.html' below to your actual login filename.
-         **/
-        const loginPage = 'index.html'; 
+        const VACANCY_DATA = [
+            { "company": "Malabar Group", "role": "Cashier & Billing Associates", "sector": "Retail", "qualification": "Degree/Diploma", "specialization": "", "experience": "1-2year/Freshers", "salary": "Rs-15000-20000", "location": "Trivandrum, Kochi, Thrisur, Kozhikode", "vacancies": "10" },
+            { "company": "Malabar Group", "role": "Administration asst", "sector": "Manufacturing &Distribution", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "12000 -15,500 (TA,Food,Accomodation,incetive)", "location": "Trivandrum,kollam,pathanamthitta,Ernakulam,Trissur,palakkad", "vacancies": "10" },
+            { "company": "Malabar Group", "role": "store asst", "sector": "Manufacturing &Distribution", "qualification": "Degree/Diploma", "specialization": "", "experience": "2 years", "salary": "12000 -15,500 (TA,Food,Accomodation,incetive)", "location": "Trivandrum,kollam,pathanamthitta,Ernakulam,Trissur,palakkad", "vacancies": "10" },
+            { "company": "WHITECORN GROUP", "role": "account asst", "sector": "Manufacturing &Distribution", "qualification": "Degree/Diploma", "specialization": "", "experience": "2 years", "salary": "15,500-60,500(TA,Food,Accomodation,incetive)", "location": "Trivandrum,kollam,pathanamthitta,Ernakulam,Trissur,palakkad", "vacancies": "10" },
+            { "company": "WHITECORN GROUP", "role": "factory asst", "sector": "Manufacturing &Distribution", "qualification": "ITI/ITC/Diploma", "specialization": "Iti,diploma", "experience": "Freshers /Experienced", "salary": "12000 -15,500 (TA,Food,Accomodation,incetive)", "location": "Trivandrum,kollam,pathanamthitta,Ernakulam,Trissur,palakkad", "vacancies": "10" },
+            { "company": "WHITECORN GROUP", "role": "distribution asst", "sector": "Manufacturing &Distribution", "qualification": "ITI/ITC/Diploma", "specialization": "Iti,diploma", "experience": "Freshers /Experienced", "salary": "12000 -15,500 (TA,Food,Accomodation,incetive)", "location": "Trivandrum,kollam,pathanamthitta,Ernakulam,Trissur,palakkad", "vacancies": "15" },
+            { "company": "WHITECORN GROUP", "role": "sales agent", "sector": "Manufacturing &Distribution", "qualification": "ITI/ITC/Diploma", "specialization": "Iti,diploma", "experience": "Freshers /Experienced", "salary": "12000 -15,500 (TA,Food,Accomodation,incetive)", "location": "Trivandrum,kollam,pathanamthitta,Ernakulam,Trissur,palakkad", "vacancies": "15" },
+            { "company": "WHITECORN GROUP", "role": "packing staff", "sector": "Manufacturing &Distribution", "qualification": "ITI/ITC/Diploma", "specialization": "Iti,diploma", "experience": "Freshers /Experienced", "salary": "12000 -15,500 (TA,Food,Accomodation,incetive)", "location": "Trivandrum,kollam,pathanamthitta,Ernakulam,Trissur,palakkad", "vacancies": "10" },
+            { "company": "WHITECORN GROUP", "role": "supervisor", "sector": "Manufacturing &Distribution", "qualification": "BBA/MBA/PG", "specialization": "", "experience": "3 years", "salary": "15,500-60,500(TA,Food,Accomodation,incetive)", "location": "Trivandrum,kollam,pathanamthitta,Ernakulam,Trissur,palakkad", "vacancies": "20" },
+            { "company": "WHITECORN GROUP", "role": "F & B associates", "sector": "Hospitality", "qualification": "Hotel Management Degree/Diploma", "specialization": "Food & beverages", "experience": "1 year and above", "salary": "18000-20000", "location": "Trivandrum", "vacancies": "3" },
+            { "company": "Hotel Dimora Thiruvananthapuram", "role": "Front Office Associate", "sector": "Hospitality", "qualification": "Hotel Management Degree/Diploma", "specialization": "Front Office Operation", "experience": "1 year", "salary": "18000-20000", "location": "Trivandrum, Kozhikode", "vacancies": "3" },
+            { "company": "Hotel Dimora Thiruvananthapuram", "role": "General Technician", "sector": "Hospitality", "qualification": "Diploma In Electrical/AC", "specialization": "Electric/AC", "experience": "1 year", "salary": "17000-19000", "location": "Trivandrum, Kozhikode", "vacancies": "2" },
+            { "company": "Belstar Microfinance Limited (Muthoot Group)", "role": "Sales Officer", "sector": "MFI-NBFC", "qualification": "10th", "specialization": "Any", "experience": "Freshers /Experienced", "salary": "15,150 -20,000", "location": "Kallambalam, Kumarapuram, Vellanad, Neyyattinkara, Kattakada", "vacancies": "15" },
+            { "company": "Muthoot Microfin Ltd", "role": "Field Officer", "sector": "NBFC", "qualification": "12th", "specialization": "NA", "experience": "Freshers", "salary": "25,000 Net Salary", "location": "Trivandrum", "vacancies": "15" },
+            { "company": "Muthoot Microfin Ltd", "role": "Housekeeping staff/ Hospital Cleaning staff", "sector": "Manpower Outsource", "qualification": "10th below", "specialization": "", "experience": "Freshers", "salary": "14000-17000", "location": "Trivandrum", "vacancies": "20" },
+            { "company": "Professional Hospitality & Support Services", "role": "Security Guard", "sector": "Manpower Outsource", "qualification": "10th", "specialization": "", "experience": "Freshers", "salary": "15000 to 17000", "location": "Trivandrum", "vacancies": "15" },
+            { "company": "Professional Hospitality & Support Services", "role": "Multitask Worker", "sector": "Manpower Outsource", "qualification": "ITI/ITC/Diploma", "specialization": "Any trade", "experience": "Freshers", "salary": "14500 + ESI +EPF", "location": "Trivandrum", "vacancies": "5" },
+            { "company": "Muralya Dairy Products Pvt Ltd", "role": "Sales Promoter", "sector": "Dairy", "qualification": "12th", "specialization": "(Female candidates with two wheeler license. Good communication skills )", "experience": "1-2 years", "salary": "15000 to 17000", "location": "Trivandrum", "vacancies": "3" },
+            { "company": "PIONEER MOTORS", "role": "HR Manager", "sector": "AUTOMOBILE", "qualification": "MBA", "specialization": "", "experience": "3 years", "salary": "25000-30000", "location": "Kaimanam,Vazuthacaud,Enjakkal ,Nedumangadu & Kaniyapuram", "vacancies": "1" },
+            { "company": "PIONEER MOTORS", "role": "HR Executive", "sector": "AUTOMOBILE", "qualification": "MBA", "specialization": "", "experience": "Freshers", "salary": "10000-15000", "location": "Kaimanam,Vazuthacaud,Enjakkal ,Nedumangadu & Kaniyapuram", "vacancies": "1" },
+            { "company": "PIONEER MOTORS", "role": "Asst Service Mananger", "sector": "AUTOMOBILE", "qualification": "B Tech", "specialization": "Mechanical", "experience": "3 years", "salary": "25000-30000", "location": "Kaimanam,Vazuthacaud,Enjakkal ,Nedumangadu & Kaniyapuram", "vacancies": "1" },
+            { "company": "PIONEER MOTORS", "role": "Showroom Advisor", "sector": "AUTOMOBILE", "qualification": "12th", "specialization": "", "experience": "Freshers", "salary": "14000-16000", "location": "Kaimanam,Vazuthacaud,Enjakkal ,Nedumangadu & Kaniyapuram", "vacancies": "8" },
+            { "company": "PIONEER MOTORS", "role": "Service Advisor", "sector": "AUTOMOBILE", "qualification": "12th", "specialization": "ITI/Diploma", "experience": "Freshers", "salary": "14000-16000", "location": "Kaimanam,Vazuthacaud,Enjakkal ,Nedumangadu & Kaniyapuram", "vacancies": "4" },
+            { "company": "PIONEER MOTORS", "role": "CRE", "sector": "AUTOMOBILE", "qualification": "12th", "specialization": "", "experience": "Freshers", "salary": "14000-16000", "location": "Kaimanam,Vazuthacaud,Enjakkal ,Nedumangadu & Kaniyapuram", "vacancies": "3" },
+            { "company": "PIONEER MOTORS", "role": "Front office executive", "sector": "AUTOMOBILE", "qualification": "12th", "specialization": "", "experience": "Freshers", "salary": "14000-16000", "location": "Kaimanam,Vazuthacaud,Enjakkal ,Nedumangadu & Kaniyapuram", "vacancies": "2" },
+            { "company": "PIONEER MOTORS", "role": "Technician", "sector": "AUTOMOBILE", "qualification": "10th", "specialization": "Male candidate (up to age 50)", "experience": "3 years in Automobile Technician Field", "salary": "16000-25000", "location": "Kaimanam,Vazuthacaud,Enjakkal ,Nedumangadu & Kaniyapuram", "vacancies": "5" },
+            { "company": "BS Pioneer Vehicles And Services Pvt Ltd, Tata Motors Commercial Vehicle Dealer", "role": "Sale executives", "sector": "Commercial vehicle", "qualification": "12th", "specialization": "", "experience": "Freshers", "salary": "12000-18000", "location": "Nalanchira,Attingal,Parassala", "vacancies": "10" },
+            { "company": "BS Pioneer Vehicles And Services Pvt Ltd, Tata Motors Commercial Vehicle Dealer", "role": "Team leader", "sector": "Commercial vehicle", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers", "salary": "20000-30000", "location": "Nalanchira,Attingal,Parassala", "vacancies": "5" },
+            { "company": "BS Pioneer Vehicles And Services Pvt Ltd, Tata Motors Commercial Vehicle Dealer", "role": "Technician", "sector": "Commercial vehicle", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers", "salary": "8000-10000", "location": "Nalanchira,Attingal,Parassala", "vacancies": "5" },
+            { "company": "LIFE CARE", "role": "Junior officer", "sector": "Hospital Management", "qualification": "12th", "specialization": "", "experience": "Freshers", "salary": "25000", "location": "All Kerala", "vacancies": "20" },
+            { "company": "LIFE CARE", "role": "telecaller", "sector": "Hospital Management", "qualification": "10th", "specialization": "", "experience": "Freshers", "salary": "13000", "location": "All Kerala", "vacancies": "5" },
+            { "company": "LIFE CARE", "role": "accountant", "sector": "Hospital Management", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "18000", "location": "All Kerala", "vacancies": "4" },
+            { "company": "LIFE CARE", "role": "Driver", "sector": "Hospital Management", "qualification": "10th", "specialization": "", "experience": "Experienced", "salary": "18000", "location": "All Kerala", "vacancies": "2" },
+            { "company": "LIFE CARE", "role": "supervisor (Store/Stock)", "sector": "Hospital Management", "qualification": "10th", "specialization": "", "experience": "Freshers", "salary": "18000", "location": "All Kerala", "vacancies": "5" },
+            { "company": "Popular Motor World PVT LTD", "role": "Sales executive", "sector": "Automobile", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "15000-25000", "location": "Kattakada, Karakkamandapam, Pappanamcode, Charachira, Varkala, Kazhakoottam, Jagathy", "vacancies": "15" },
+            { "company": "Popular Motor World PVT LTD", "role": "Technician", "sector": "Automobile", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "12000-25000", "location": "Kattakada, Karakkamandapam, Pappanamcode, Charachira, Varkala, Kazhakoottam, Jagathy", "vacancies": "20" },
+            { "company": "Popular Motor World PVT LTD", "role": "Team leader", "sector": "Automobile", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "28000-40000", "location": "Kattakada, Karakkamandapam, Pappanamcode, Charachira, Varkala, Kazhakoottam, Jagathy", "vacancies": "4" },
+            { "company": "Popular Motor World PVT LTD", "role": "CRE", "sector": "Automobile", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "14000- 20000", "location": "Kattakada, Karakkamandapam, Pappanamcode, Charachira, Varkala, Kazhakoottam, Jagathy", "vacancies": "5" },
+            {
+                "company": "Popular Motor World PVT LTD", "role": "Service Adviser", "sector": "Automobile", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "16000-35000", "location": "Kattakada, Karakkamandapam, Pappanamcode, Charachira, Varkala, Kazhakoottam, Jagathy", "vacancies": "7"
+            },
+            { "company": "Lemon Tree Premier Thiruvananthapuram", "role": "Housekeeping", "sector": "Hotel", "qualification": "Degree/Diploma", "specialization": "PWD candidates only", "experience": "Freshers /Experienced", "salary": "18000", "location": "Thiruvananthapuram", "vacancies": "1" },
+            { "company": "Lemon Tree Premier Thiruvananthapuram", "role": "F&B Service", "sector": "Hotel", "qualification": "Degree/Diploma", "specialization": "PWD candidates only", "experience": "Freshers /Experienced", "salary": "18000", "location": "Thiruvananthapuram", "vacancies": "1" },
+            { "company": "Lemon Tree Premier Thiruvananthapuram", "role": "Fron Office", "sector": "Hotel", "qualification": "Degree/Diploma", "specialization": "PWD candidates only", "experience": "Freshers /Experienced", "salary": "18000", "location": "Thiruvananthapuram", "vacancies": "1" },
+            { "company": "Lemon Tree Premier Thiruvananthapuram", "role": "Food Production", "sector": "Hotel", "qualification": "Degree/Diploma", "specialization": "PWD candidates only", "experience": "Freshers /Experienced", "salary": "18000", "location": "Thiruvananthapuram", "vacancies": "1" },
+            { "company": "Electa Energy Pvt Ltd", "role": "Technician G1", "sector": "Energy", "qualification": "ITI/ITC/Diploma", "specialization": "Electrical & Electronics industry, especially in energy sector", "experience": "Freshers - 2 year Experienced", "salary": "15000-25000", "location": "Keltron Junction, Karakulam, Thiruvananthapuram", "vacancies": "5" },
+            { "company": "SWIGGY", "role": "Delivery partner", "sector": "Delivery", "qualification": "NA", "specialization": "", "experience": "NA", "salary": "Upto 48000", "location": "Pattom,thampanoor, kazhakoottam, technopark, neyyattinkara, kovalam, nedumangad", "vacancies": "100" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Associate Customer Service – International Voice Process", "sector": "BFSI, IT & BPO Services", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "28000-37000", "location": "Trivandrum, ", "vacancies": "40" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Associate Technical Customer Support – International Voice Process", "sector": "BFSI, IT & BPO Services", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "19000-32000", "location": "Kochi", "vacancies": "40" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Customer Experience Specialist – Hindi", "sector": "BFSI, IT & BPO Services", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "19000-30000", "location": "Kochi", "vacancies": "25" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Customer Experience Specialist – Kannada", "sector": "BFSI, IT & BPO Services", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "19000-30000", "location": "Kochi", "vacancies": "40" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Customer Experience Specialist – Tamil", "sector": "BFSI, IT & BPO Services", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "19000-30000", "location": "Kochi", "vacancies": "40" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Customer Experience Specialist – Telugu", "sector": "BFSI, IT & BPO Services", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "19000-30000", "location": "Kochi", "vacancies": "40" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Business Support Executive", "sector": "BFSI, IT & BPO Services", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "21000-40000", "location": "Trivandrum, Tiruvalla, Kollam", "vacancies": "3" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Financial Consultant", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "19000-26000", "location": "Across Kerala", "vacancies": "29" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Junior Financial Consultant", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "26000-32000", "location": "Across Kerala", "vacancies": "10" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Senior Financial Consultant", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "32000-40000", "location": "Across Kerala", "vacancies": "12" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Assistant Manager Financial Consultant", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "40000-60000", "location": "Across Kerala", "vacancies": "6" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "NRI Financial Consultant", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "30000-52000", "location": "Across Kerala", "vacancies": "10" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Equity Dealer", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "21000-40000", "location": "Across Kerala", "vacancies": "4" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Commodity Dealer", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "24000-35000", "location": "Across Kerala", "vacancies": "3" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Branch Sales Executive (House Loan / Personal Loan)", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "24000", "location": "Across Kerala", "vacancies": "21" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Associate Agency Development Manager", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "25000-58000", "location": "Across Kerala", "vacancies": "12" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Relationship Manager", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "25000-33000", "location": "Across Kerala", "vacancies": "8" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "Human Resources Executive", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "6 months – 5 years", "salary": "15000- 25000", "location": "Nalanchira , Trivandrum", "vacancies": "2" },
+            { "company": "Trinity SkillWorks Private Limited", "role": "HR intern", "sector": "BFSI, IT & BPO Services", "qualification": "UG/PG/MBA/MCom", "specialization": "Minimum education requirement for specific banks/financial roles", "experience": "Fresher- 6 months ", "salary": "12000-15000 TA ", "location": "Nalanchira , Trivandrum", "vacancies": "1" },
+            { "company": "Team waves", "role": "Business development manager", "sector": "education and entertainment division", "qualification": "Degree/Diploma", "specialization": "", "experience": "Fresher", "salary": "18000", "location": "Trivandrum, Kochi and Calicut", "vacancies": "36" },
+            { "company": "Team waves", "role": "Logistics Trainee", "sector": "education and entertainment division", "qualification": "Logistics Diploma/ Degree", "specialization": "", "experience": "Fresher", "salary": "12000", "location": "Trivandrum, Kochi and Calicut", "vacancies": "9" },
+            { "company": "Team waves", "role": "Admin Executive", "sector": "education and entertainment division", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "12000-15000", "location": "Trivandrum, Kochi and Calicut", "vacancies": "18" },
+            { "company": "Team waves", "role": "Business Development Executive", "sector": "education and entertainment division", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Fresher", "salary": "15000", "location": "Trivandrum, Kochi and Calicut", "vacancies": "32" },
+            { "company": "Team waves", "role": "Graphic Designer", "sector": "education and entertainment division", "qualification": "Graphic designing Course", "specialization": "", "experience": "Experienced", "salary": "20000", "location": "Trivandrum, Kochi and Calicut", "vacancies": "5" },
+            { "company": "Team waves", "role": "Accountant", "sector": "education and entertainment division", "qualification": "Degree+ GST filing", "specialization": "1 year experience in GST filing compulsory", "experience": "Experienced", "salary": "12000+ allowances (TA, food , Accomodation)", "location": "Trivandrum, Kochi and Calicut", "vacancies": "15" },
+            { "company": "Team waves", "role": "Collection Executive", "sector": "education and entertainment division", "qualification": "10th", "specialization": "", "experience": "", "salary": "15000", "location": "", "vacancies": "10" },
+            { "company": "Ayur herbals", "role": "Junior officer", "sector": "Health care", "qualification": "Degree/Diploma", "specialization": "", "experience": "Fresher", "salary": "16000- 20000", "location": "Trivandrum, Palakkad", "vacancies": "10" },
+            { "company": "Ayur herbals", "role": "Data entry", "sector": "Health care", "qualification": "12th & DCA", "specialization": "", "experience": "Freshers /Experienced", "salary": "10000- 14000", "location": "Trivandrum, Palakkad", "vacancies": "2" },
+            { "company": "Ayur herbals", "role": "Tele caller", "sector": "Health care", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "10000-12000", "location": "Trivandrum, Palakkad", "vacancies": "2" },
+            { "company": "Ayur herbals", "role": "Sales Coordinator", "sector": "Health care", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "14000-16000", "location": "Trivandrum, Palakkad", "vacancies": "8" },
+            { "company": "Ayur herbals", "role": "Packing", "sector": "Health care", "qualification": "10th", "specialization": "female prefered", "experience": "Freshers", "salary": "10000", "location": "Trivandrum, Palakkad", "vacancies": "6" },
+            { "company": "Ayur herbals", "role": "Sales staff", "sector": "Health care", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "10000-15000", "location": "Trivandrum, Palakkad", "vacancies": "8" },
+            { "company": "Info Apps", "role": "Office Assistant", "sector": "Learning Application Promoting Company", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers", "salary": "15000", "location": "Kozhikode Ernakulam Trivandrum", "vacancies": "3" },
+            { "company": "Info Apps", "role": "Business Development Executive", "sector": "Learning Application Promoting Company", "qualification": "12th", "specialization": "", "experience": "Freshers", "salary": "15000", "location": "Kozhikode Ernakulam Trivandrum", "vacancies": "15" },
+            { "company": "Info Apps", "role": "Business Development Manager", "sector": "Learning Application Promoting Company", "qualification": "Degree/Diploma", "specialization": "", "experience": "I year", "salary": "20000", "location": "Kozhikode Ernakulam Trivandrum", "vacancies": "10" },
+            { "company": "Info Apps", "role": "Marketing Executive", "sector": "Learning Application Promoting Company", "qualification": "12th", "specialization": "", "experience": "Freshers", "salary": "15000", "location": "Kozhikode Ernakulam Trivandrum", "vacancies": "7" },
+            { "company": "Info Apps", "role": "Telecalling", "sector": "Learning Application Promoting Company", "qualification": "12th", "specialization": "", "experience": "Freshers", "salary": "12000", "location": "Kozhikode Ernakulam Trivandrum", "vacancies": "10" },
+            { "company": "Quess", "role": "xiomi sales promoter", "sector": "Retail", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "18000-20000 PF & ESI separate", "location": "All kerala", "vacancies": "252" },
+            { "company": "ULCCS", "role": "RURAL MASON (CIVIL)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "150" },
+            { "company": "ULCCS", "role": "BAR BENDER (CIVIL)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "125" },
+            { "company": "ULCCS", "role": "SHUTTERING MASON (CIVIL)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "150" },
+            { "company": "ULCCS", "role": "STAGING MASON (CIVIL)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "100" },
+            { "company": "ULCCS", "role": "SCAFFOLDING (CIVIL)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "75" },
+            { "company": "ULCCS", "role": "CONCRETE MASON (CIVIL)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "100" },
+            { "company": "ULCCS", "role": "INTERIOR (INTERIOR FITOUT)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "150" },
+            { "company": "ULCCS", "role": "FLOORING (INTERIOR FITOUT)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "150" },
+            { "company": "ULCCS", "role": "LANDSCAPING (INTERIOR FITOUT)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "25" },
+            { "company": "ULCCS", "role": "ELECTRONICS(GENERAL)SKILLED (ELECTRICAL)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "100" },
+            { "company": "ULCCS", "role": "INDUSTRIAL ELECTRONICS (ELECTRICAL)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "25" },
+            { "company": "ULCCS", "role": "WIREMAN-SEMI SKILLED (ELECTRICAL)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "30" },
+            { "company": "ULCCS", "role": "PANEL & CONTROL WIRING TECHNICIAN (ELECTRICAL)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "15" },
+            { "company": "ULCCS", "role": "WIRING & SOLAR ENERGY TECHNICIAN (ELECTRICAL)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "15" },
+            { "company": "ULCCS", "role": "MAINTENANCE TECHNICIAN (ELECTRICAL)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "20" },
+            { "company": "ULCCS", "role": "TECHNICIANS & TECHNICIAN HELPER(ELECTRICAL & ELECTRONICS)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "15" },
+            { "company": "ULCCS", "role": "PUBLIC HEALTH ENGINEERING (PLUMBER)", "sector": "CONSTRUCTION", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "25" },
+            { "company": "ULCCS", "role": "FIRE PROTECTION SYSTEM (SAFETY)TECHNICIANB(MECHANICAL)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "10" },
+            { "company": "ULCCS", "role": "HVAC (MECHANICAL)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "8" },
+            { "company": "ULCCS", "role": "WELDER (MECHANICAL)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "30" },
+            { "company": "ULCCS", "role": "ALUMINIUM FABRICATOR (MECHANICAL)", "sector": "CONSTRUCTION", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "30" },
+            { "company": "ULCCS", "role": "LAB TECHNICIAN (LABORATORY)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "20" },
+            { "company": "ULCCS", "role": "LAB ASSISTANT (LABORATORY)", "sector": "CONSTRUCTION", "qualification": "10th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "34" },
+            { "company": "ULCCS", "role": "MECHANIC HYDRAULIC", "sector": "CONSTRUCTION", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "40" },
+            { "company": "ULCCS", "role": "ASSISTANT EXCAVATOR OPERATOR", "sector": "CONSTRUCTION", "qualification": "12th", "specialization": "", "experience": "Freshers /Experienced", "salary": "AS PER INDUSTRY STANDARD", "location": "All kerala", "vacancies": "40" },
+            { "company": "Zudio", "role": "Sales Associates", "sector": "Fashion Retail", "qualification": "10th", "specialization": "", "experience": "Fresher", "salary": "14000", "location": "", "vacancies": "25" },
+            { "company": "Zudio", "role": "Sales Officers & Department Managers", "sector": "Fashion Retail", "qualification": "12th", "specialization": "", "experience": "1 to 5 years", "salary": "15000 - 25000", "location": "", "vacancies": "15" },
+            { "company": "iCloudhomes -iScape Designers Pvt LTD", "role": "Site Engineers", "sector": "Builders and Construction", "qualification": "B Tech/Diploma", "specialization": "", "experience": "Freshers /Minimum 1 to 2 years", "salary": "10000-15000", "location": "", "vacancies": "3" },
+            { "company": "iCloudhomes -iScape Designers Pvt LTD", "role": "Electrical Engineers", "sector": "Builders and Construction", "qualification": "B Tech/Diploma", "specialization": "", "experience": "Freshers /Minimum 1 to 2 years", "salary": "15000-20000", "location": "", "vacancies": "2" },
+            { "company": "iCloudhomes -iScape Designers Pvt LTD", "role": "Carpenter", "sector": "Builders and Construction", "qualification": "ITI/ITC/Diploma", "specialization": "", "experience": "Freshers /Minimum 1 to 2 years", "salary": "10000-15000", "location": "", "vacancies": "2" },
+            { "company": "iCloudhomes -iScape Designers Pvt LTD", "role": "Driver/ Mechanic", "sector": "Builders and Construction", "qualification": "ITI/ITC/Diploma", "specialization": "Machine Mechanic is preffered", "experience": "Freshers /Minimum 1 to 2 years", "salary": "10000-15000", "location": "", "vacancies": "1" },
+            { "company": "iCloudhomes -iScape Designers Pvt LTD", "role": "Sales Trainee", "sector": "Builders and Construction", "qualification": "Degree/Diploma", "specialization": "", "experience": "Freshers /Minimum 1 to 2 years", "salary": "12000-20000", "location": "", "vacancies": "2" },
+            { "company": "HDFC LIFE", "role": "Business development Managers", "sector": "Insurance/Banking", "qualification": "Degree/Diploma", "specialization": "1 year Experience in Insurance field is must", "experience": "1 year", "salary": "27000", "location": "", "vacancies": "10" },
+            { "company": "HDFC LIFE", "role": "Financial consultant", "sector": "Insurance/Banking", "qualification": "12th", "specialization": "", "experience": "Fresher", "salary": "15000-25000", "location": "", "vacancies": "25" },
+            { "company": "ODEPC", "role": "Art Teacher (Indian School , SULTHANATE OF OMAN)", "sector": "Education", "qualification": "Bachelor of Fine Arts", "specialization": "", "experience": "2", "salary": "OMR 300/-", "location": "", "vacancies": "1" },
+            { "company": "ODEPC", "role": "Assistant Nurse Homecare ( Dr.Sunny Home Health Care United Arab Emirates)", "sector": "Health care", "qualification": "GNM with MOH/DHA License as Assistant Nurse", "specialization": "GNM with MOH/DHA License as Assistant Nurse", "experience": "1 year and above in Hospital/ Clinic/ Homecare", "salary": "AED 3,500/-", "location": "", "vacancies": "50" },
+            { "company": "ODEPC", "role": "Male Industrial Nurse- at UAE", "sector": "Health care", "qualification": "BSc Nursing", "specialization": "BSc Nursing / Post Basic BSc Nursing", "experience": "2 Years", "salary": "AED 5,000/-", "location": "", "vacancies": "100" },
+            { "company": "Muralya Dairy Products Pvt Ltd", "role": "Field sales Executive", "sector": "Dairy", "qualification": "12th", "specialization": "", "experience": "1-3 years", "salary": "18000- 20000", "location": "Trivandrum", "vacancies": "3" },
+            { "company": "Muralya Dairy Products Pvt Ltd", "role": "Cashier", "sector": "Dairy", "qualification": "BCOM", "specialization": "Male candidates-Working experience as cashier", "experience": "3-5 years", "salary": "up to 250000", "location": "Trivandrum, Ernakulam", "vacancies": "2" },
+            { "company": "Muralya Dairy Products Pvt Ltd", "role": "Drivers- Heavy/ Light Vehicle Motor", "sector": "Dairy", "qualification": "10 th", "specialization": "Below 35 years of age", "experience": "3- 5 years", "salary": "20000", "location": "Trivandrum", "vacancies": "4" },
+            { "company": "Muralya Dairy Products Pvt Ltd", "role": "Helper", "sector": "Dairy", "qualification": "10th / 12th", "specialization": "Male candidates", "experience": "Fresher", "salary": "15500", "location": "Trivandrum", "vacancies": "6" }
+        ];
 
-        const candidateName = sessionStorage.getItem('candidate_name');
-        const regId = sessionStorage.getItem('candidate_regId');
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyYGskWMk16ibanumSnjuoI5vO4k88b67UceocRrzMk3awwOSYYEOdbaefB5JfiSro/exec';
 
-        if (candidateName) {
-        // Check if session exists
-        if (!candidateName) {
-            console.log("No session found. Redirecting...");
-            // window.location.href = loginPage; // Uncomment this when running on your real server
-        } else {
-            document.getElementById('welcomeText').innerText = `Welcome, ${candidateName}!`;
+        const mobile = sessionStorage.getItem("candidate_mobile") || "";
+        const candidateName = sessionStorage.getItem("candidate_name") || "";
+        const regId = sessionStorage.getItem("candidate_regId") || "";
+        const gender = sessionStorage.getItem("candidate_gender") || "";
+        const pwd = sessionStorage.getItem("candidate_pwd") || "No";
+
+        if (candidateName) document.getElementById("welcomeText").innerText = "Welcome, " + candidateName + "!";
+        if (regId) document.getElementById("candidateId").innerText = "Reg ID: " + regId;
+
+        const ACTIVE_VACANCIES = VACANCY_DATA.filter(v => parseInt(v.vacancies) > 0);
+        let selectedJobs = [];
+
+        (function init() {
+            const totalOpenings = ACTIVE_VACANCIES.reduce((sum, v) => sum + (parseInt(v.vacancies) || 0), 0);
+            document.getElementById("statCompanies").innerText = new Set(ACTIVE_VACANCIES.map(v => v.company)).size;
+            document.getElementById("statRoles").innerText = new Set(ACTIVE_VACANCIES.map(v => v.role)).size;
+            document.getElementById("statTotal").innerText = totalOpenings.toLocaleString();
+
+            const sel = document.getElementById("jobRoleFilter");
+            sel.innerHTML = '<option value="">All Job Roles</option>';
+            [...new Set(ACTIVE_VACANCIES.map(v => v.role).filter(Boolean))].sort().forEach(r => {
+                const o = document.createElement("option");
+                o.value = o.textContent = r;
+                sel.appendChild(o);
+            });
+
+            renderTable(ACTIVE_VACANCIES);
+            setTimeout(checkStatus, 500);
+        })();
+
+        function checkStatus() {
+            if (!regId) return;
+            fetch(GAS_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "checkApplicationStatus", regId })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success && d.applied) {
+                        selectedJobs = (d.jobs || []).map(j => j.company + " - " + j.role);
+                        lockDashboard(d.jobs || []);
+                    }
+                })
+                .catch(e => console.warn("Status check failed:", e));
         }
-        if (regId) {
-            document.getElementById('candidateId').innerText = `Reg ID: ${regId}`;
-            if (regId) {
-                document.getElementById('candidateId').innerText = `Reg ID: ${regId}`;
+
+        function lockDashboard(jobs) {
+            document.getElementById("applySection").style.display = "none";
+            document.getElementById("appliedView").style.display = "block";
+            document.getElementById("appliedList").innerHTML = jobs.map(j => `
+        <div class="vacancy-card">
+            <div class="co">${esc(j.company)}</div>
+            <h4>${esc(j.role)}</h4>
+            <div style="margin-top:.75rem;padding:.4rem .9rem;background:#fef3c7;color:#92400e;
+                        border-radius:.5rem;font-weight:600;font-size:.85rem;display:inline-block;">
+                Status: ${esc(j.status || "Submitted")}
+            </div>
+        </div>`).join("");
+        }
+
+        function filterJobs() {
+            const role = document.getElementById("jobRoleFilter").value;
+            const search = document.getElementById("globalSearch").value.toLowerCase().trim();
+            const list = ACTIVE_VACANCIES.filter(v => {
+                const mr = !role || v.role === role;
+                const ms = !search ||
+                    v.role.toLowerCase().includes(search) ||
+                    v.company.toLowerCase().includes(search) ||
+                    v.location.toLowerCase().includes(search) ||
+                    v.sector.toLowerCase().includes(search) ||
+                    v.specialization.toLowerCase().includes(search) ||
+                    v.qualification.toLowerCase().includes(search);
+                return mr && ms;
+            });
+            renderTable(list);
+        }
+        document.getElementById("jobRoleFilter").onchange = filterJobs;
+        document.getElementById("globalSearch").oninput = filterJobs;
+
+        function renderTable(list) {
+            const grid = document.getElementById("vacancyGrid");
+            const countEl = document.getElementById("resultsCount");
+
+            if (!list.length) {
+                countEl.innerText = "";
+                grid.innerHTML = `<div style="text-align:center;padding:3rem;background:#fff;border-radius:1rem;color:var(--secondary);">
+            <h3>No matching vacancies found.</h3>
+            <p style="margin-top:.5rem;">Try a different search or clear the filter.</p></div>`;
+                return;
             }
+
+            countEl.innerText = "Showing " + list.length + " of " + ACTIVE_VACANCIES.length + " vacancies";
+            let html = `<table class="vacancy-table">
+        <thead><tr><th>#</th><th>Role & Employer</th><th>Qualification & Exp</th><th>Location & Salary</th><th>Action</th></tr></thead><tbody>`;
+
+            list.forEach((v, i) => {
+                const key = v.company + " - " + v.role;
+                const isSel = selectedJobs.includes(key);
+                const extras = [v.specialization, v.vacancies ? v.vacancies + " opening(s)" : ""].filter(Boolean).join(" · ");
+                html += `<tr>
+            <td data-label="#" style="color:var(--secondary);font-size:.8rem;font-weight:600;width:32px;">${i + 1}</td>
+            <td data-label="Role / Employer">
+                <div class="role-title">${esc(v.role)}</div>
+                <div class="company-name">${esc(v.company)}</div>
+                ${v.sector ? `<div style="font-size:.75rem;color:var(--secondary);margin-top:2px;">${esc(v.sector)}</div>` : ""}
+            </td>
+            <td data-label="Qualification / Exp">
+                <div style="font-size:.85rem;line-height:1.7;">
+                    ${v.qualification ? `<div>🎓 ${esc(v.qualification)}</div>` : ""}
+                    ${v.experience ? `<div>⏱ ${esc(v.experience)}</div>` : ""}
+                    ${extras ? `<div style="color:var(--secondary);font-size:.78rem;">ℹ️ ${esc(extras)}</div>` : ""}
+                </div>
+            </td>
+            <td data-label="Location / Salary">
+                <div style="font-size:.85rem;line-height:1.8;">
+                    📍 ${esc(v.location || "N/A")} <br> 💰 ${esc(v.salary || "N/A")}
+                </div>
+            </td>
+            <td data-label="Action" style="width:110px;">
+                <button class="btn ${isSel ? "btn-secondary" : "btn-primary"}"
+                        style="padding:.5rem .75rem;font-size:.8rem;width:100%;"
+                        onclick="toggleJob(${esc(JSON.stringify(key))})">
+                    ${isSel ? "✓ Selected" : "+ Select"}
+                </button>
+            </td>
+        </tr>`;
+            });
+            html += "</tbody></table>";
+            grid.innerHTML = html;
         }
 
-        // Logout function: Only goes to login when this is clicked
-        function logout() {
-            sessionStorage.clear();
-            window.location.href = 'login.html';
-            alert("Logging out...");
-            window.location.href = loginPage; 
+        function toggleJob(key) {
+            const idx = selectedJobs.indexOf(key);
+            if (idx > -1) selectedJobs.splice(idx, 1);
+            else {
+                if (selectedJobs.length >= 4) { alert("Max 4 selections."); return; }
+                selectedJobs.push(key);
+            }
+            updatePanel();
+            filterJobs();
         }
-    </script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+        function updatePanel() {
+            document.getElementById("count").innerText = selectedJobs.length;
+            document.getElementById("finalApply").disabled = (selectedJobs.length === 0);
+            document.getElementById("selectedList").innerHTML = selectedJobs.map(j => `
+        <div class="selected-item">${esc(j)} <span class="remove-btn" onclick="toggleJob(${esc(JSON.stringify(j))})">×</span></div>`).join("");
+        }
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyARoLteIbD8oFPEtKJ3ZvhxkiOHNgfC-I4",
-            authDomain: "placements2026-free.firebaseapp.com",
-            projectId: "placements2026-free",
-            storageBucket: "placements2026-free.firebasestorage.app",
-            messagingSenderId: "672350914241",
-            appId: "1:672350914241:web:171f23d75e76a96f103640"
+        document.getElementById("finalApply").onclick = function () {
+            const btn = this; btn.disabled = true; btn.innerText = "⏳ Submitting…";
+            fetch(GAS_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "applyJobs", mobile, fullName: candidateName, regId, gender, pwd, selectedJobs })
+            })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success) { showApplicationCard(); lockDashboard(selectedJobs.map(k => ({ company: k.split(" - ")[0], role: k.split(" - ").slice(1).join(" - ") }))); }
+                    else { alert("Busy, try again."); btn.disabled = false; btn.innerText = "✅ Apply Now"; }
+                })
+                .catch(() => { alert("Error."); btn.disabled = false; btn.innerText = "✅ Apply Now"; });
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+        function showApplicationCard() {
+            document.getElementById("cardRegId").innerText = regId;
+            document.getElementById("cardName").innerText = candidateName;
 
-        // Security check: Redirect to login ONLY if not authenticated
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = "login.html";
-            }
-        });
+            const tableBody = document.getElementById("cardJobsTableBody");
+            tableBody.innerHTML = selectedJobs.map((j, i) => {
+                const parts = j.split(" - ");
+                const company = parts[0];
+                const role = parts.slice(1).join(" - ");
+                return `<tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 1rem; color: #334155;">${i + 1}</td>
+                    <td style="padding: 1rem; color: #334155;"><div style="font-weight:700;">${esc(company)}</div></td>
+                    <td style="padding: 1rem; color: #334155;">${esc(role)}</td>
+                    <td style="padding: 1rem; color: #2563eb; font-weight: 700; text-align: center;">-</td>
+                </tr>`;
+            }).join("");
+
+            document.getElementById("applyModal").style.display = "flex";
+        }
+
+        function downloadApplicationCard(e) {
+            const btn = e.target;
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Generating PDF..."; btn.disabled = true;
+
+            const element = document.getElementById("admitPrintAreaUI");
+
+            const opt = {
+                margin: 0,
+                filename: `AdmitCard_${regId.replace(/\//g, '_')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    letterRendering: true,
+                    scrollY: 0,
+                    windowScrollY: 0,
+                    backgroundColor: '#ffffff'
+                },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Ensure we are at the top of the modal for a clean capture
+            document.getElementById('applyModal').scrollTop = 0;
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("PDF Export Error:", err);
+                btn.innerText = "❌ Export Failed";
+                btn.disabled = false;
+            });
+        }
+
+        function logout() { sessionStorage.clear(); window.location.href = "index.html"; }
+        function esc(s) { return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script>
+        firebase.initializeApp({ apiKey: "AIzaSyARoLteIbD8oFPEtKJ3ZvhxkiOHNgfC-I4", authDomain: "placements2026-free.firebaseapp.com", projectId: "placements2026-free", storageBucket: "placements2026-free.firebasestorage.app", messagingSenderId: "672350914241", appId: "1:672350914241:web:171f23d75e76a96f103640" });
+        firebase.auth().onAuthStateChanged(user => { if (!user) window.location.href = "login.html"; });
     </script>
 </body>
 
 </html>
-
-
