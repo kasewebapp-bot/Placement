@@ -35,7 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Trinity SkillWorks Private Limited", logo: "" },
         { name: "Team waves", logo: "" },
         { name: "Ayur herbals", logo: "" },
-        { name: "Info Apps", logo: "" }
+        { name: "Info Apps", logo: "" },
+        { name: "Digitide", logo: "" },
+        { name: "Teleperformance", logo: "" },
+        { name: "Quess", logo: "" },
+        { name: "IIIC", logo: "" },
+        { name: "Zudio", logo: "" },
+        { name: "iCloudhomes Pvt Ltd", logo: "" },
+        { name: "HDFC LIFE", logo: "" },
+        { name: "ODEPC", logo: "" }
     ];
 
     const sectors = [
