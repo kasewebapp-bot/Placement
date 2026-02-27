@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form Submission Logic
     const form = document.getElementById('placementForm');
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyYGskWMk16ibanumSnjuoI5vO4k88b67UceocRrzMk3awwOSYYEOdbaefB5JfiSro/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyePO45yFT6gYZKMXGq9IsFekZqgz4aH2osmMXVyg5ys1kqhWFJ2bnAAUMvYe3oyjk/exec';
 
     if (form) {
         form.addEventListener('submit', async (e) => {
