@@ -741,42 +741,42 @@ textarea:focus {
     }
 
     .hero {
-        padding: 4rem 0;
+        padding: 3rem 0;
     }
 
     .hero h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
 
     .hero p {
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
     }
 
     .hero-btns {
         flex-direction: column;
-        max-width: 300px;
-        margin: 0 auto;
+        gap: 0.75rem;
     }
 
     .btn {
         width: 100%;
+        justify-content: center;
+    }
+
+    /* Dashboard Stats Mobile */
+    .stats-bar {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+        padding: 1.25rem !important;
+    }
+
+    .stats-bar div:last-child {
+        grid-column: span 2;
+        margin-left: 0 !important;
         text-align: center;
-        padding: 0.85rem;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-container {
-        padding: 1.5rem;
-    }
-
-    .form-row,
-    .form-grid-address {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 0.75rem;
+        font-size: 0.75rem !important;
     }
 
     /* Table Mobile Card View */
@@ -786,88 +786,110 @@ textarea:focus {
     .vacancy-table th,
     .vacancy-table td,
     .vacancy-table tr {
-        display: block;
+        display: block !important;
     }
 
-    .vacancy-table thead tr {
+    .vacancy-table thead {
         position: absolute;
         top: -9999px;
         left: -9999px;
     }
 
-    .vacancy-table tr {
-        margin-bottom: 1.5rem;
-        background: var(--white);
-        border: 1px solid #e2e8f0;
-        border-radius: 1rem;
-        padding: 1.25rem;
-        box-shadow: var(--shadow);
+    .vacancy-row {
+        margin-bottom: 1.25rem !important;
+        background: var(--white) !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 1.25rem !important;
+        padding: 1.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
     }
 
     .vacancy-table td {
-        border: none;
+        border: none !important;
         position: relative;
         padding: 0.75rem 0 !important;
-        text-align: left;
-        border-bottom: 1px solid #f1f5f9;
+        text-align: right !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
     }
 
     .vacancy-table td:last-child {
-        border-bottom: none;
+        border-bottom: none !important;
+        padding-top: 1.25rem !important;
+        justify-content: center !important;
     }
 
-    .vacancy-table td:before {
+    .vacancy-table td::before {
         content: attr(data-label);
-        display: block;
         font-weight: 700;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         color: var(--secondary);
         text-transform: uppercase;
-        margin-bottom: 0.25rem;
+        text-align: left;
     }
 
-    .vacancy-table td[data-label="Action"] {
-        padding-top: 1rem !important;
-    }
-
-    .carousel-track {
-        animation-duration: 25s;
-    }
-
+    /* Admit Card Mobile */
     .modal-content {
-        padding: 1.25rem;
-        width: 100%;
-        border-radius: 1rem;
+        padding: 1rem !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
     }
 
     .admit-card {
-        padding: 1rem;
-        border-width: 2px;
+        padding: 1rem !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 1rem !important;
+        margin-top: 0.5rem;
     }
 
     .admit-card-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-        padding-bottom: 1rem;
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 1.25rem !important;
+        gap: 1.25rem !important;
     }
 
     .admit-logo {
-        height: 45px;
+        height: 40px !important;
     }
 
     .reg-id-box {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
-        padding: 0.75rem;
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        text-align: center !important;
+        padding: 1rem !important;
+        background: #f8fafc !important;
+        border-radius: 0.75rem !important;
     }
 
     .info-grid-admit {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 1.5rem !important;
     }
 
     .info-item .value {
-        font-size: 0.95rem;
+        font-size: 1rem !important;
+    }
+
+    .modal-actions {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+        margin: 0 !important;
     }
 }
