@@ -137,8 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Stats Counter Animation
     const stats = [
-        { id: 'stat-companies', target: 100, suffix: '+' },
-        { id: 'stat-vacancies', target: 1000, suffix: '+' },
+        { id: 'stat-companies', target: 24, suffix: '+' },
+        { id: 'stat-vacancies', target: 2900, suffix: '+' },
         { id: 'stat-package', target: 10, suffix: ' LPA' }
     ];
 
@@ -449,3 +449,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
